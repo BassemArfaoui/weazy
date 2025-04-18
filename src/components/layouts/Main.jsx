@@ -1,7 +1,6 @@
 // src/components/Main.jsx
 import { useState } from 'react';
 import Menu from './Menu';
-import Sidebar from './Sidebar';
 
 const Main = ({ children }) => {
 
