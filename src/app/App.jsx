@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Main from "../components/layouts/Main";
 import Test from "../components/test/Test";
 import "./App.css";
+import PageLoader from "../components/tools/PageLoader";
 
 const queryClient = new QueryClient();
 
@@ -19,7 +20,7 @@ function App() {
       <div className="text-3xl font-bold">
         <Router>
           <Main>
-            <Suspense fallback={<div className="text-center">Loading...</div>}>
+            <Suspense fallback={<PageLoader />}>
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/test" element={<Test />} />
