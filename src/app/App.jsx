@@ -6,7 +6,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Main from "../components/layouts/Main";
 import Test from "../components/test/Test";
 import "./App.css";
-import Sidebar from "../components/layouts/Sidebar";
 
 const queryClient = new QueryClient();
 
