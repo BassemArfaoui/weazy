@@ -3,7 +3,7 @@ import { HiArrowSmUp, HiOutlinePlus } from 'react-icons/hi'
 
 function PromptArea() {
   return (
-    <div className="bg-secondary w-[750px] h-[170px] rounded-3xl  items-center justify-between text-inter text-xl text-gray-300 flex flex-col gap-1 mb-10 pb-1 pt-5">
+    <div className="bg-secondary w-[750px] rounded-3xl  items-center justify-between text-inter text-xl text-gray-300 flex flex-col gap-1 mb-10 pb-1 pt-5">
     <div className='px-8 w-full'>
       <textarea
         rows={2}
