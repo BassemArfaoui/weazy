@@ -4,10 +4,21 @@ import Menu from './Menu';
 
 const Main = ({ children }) => {
 
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
+  const openHistory = () =>
+  {
+    setIsHistoryOpen(true);
+  }
+
+  const closeHistory = () =>
+  {
+    setIsHistoryOpen(false);
+  }
 
   return (
     <div className="flex flex-col h-screen">
-      <Menu/>
+      <Menu  open={isHistoryOpen}  openHistory={openHistory} closeHistory={closeHistory} />
 
       <div className="flex flex-1 overflow-hidden">
 
