@@ -6,6 +6,7 @@ const Main = ({ children }) => {
 
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const openHistory = () =>
   {
@@ -15,6 +16,11 @@ const Main = ({ children }) => {
   const openWishlist = () =>
   {
     setIsWishlistOpen(true);
+  }
+
+  const openSettings = () =>
+  {
+    setIsSettingsOpen(true);
   }
 
   const closeHistory = () =>
@@ -27,9 +33,14 @@ const Main = ({ children }) => {
     setIsWishlistOpen(false);
   }
 
+  const closeSettings = () =>
+  {
+    setIsSettingsOpen(false);
+  }
+
   return (
     <div className="flex flex-col h-screen">
-      <Menu  historyOpen={isHistoryOpen}  wishlistOpen={isWishlistOpen} openWishlist={openWishlist} closeWishlist={closeWishlist}  openHistory={openHistory} closeHistory={closeHistory} />
+      <Menu  historyOpen={isHistoryOpen}  wishlistOpen={isWishlistOpen} settingsOpen={isSettingsOpen} openSettings={openSettings} closeSettings={closeSettings} openWishlist={openWishlist} closeWishlist={closeWishlist}  openHistory={openHistory} closeHistory={closeHistory} />
 
       <div className="flex flex-1 overflow-hidden">
 

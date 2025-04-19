@@ -5,7 +5,7 @@ import NewChat from "../../assets/svg/NewChat";
 import History from "../../assets/svg/History";
 import BlackModal from "../tools/BlackModal";
 import { FaRegHeart } from "react-icons/fa";
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import TooltipWrapper from "../tools/TooltipWrapper";
 
 const Menu = ({
@@ -15,7 +15,18 @@ const Menu = ({
   wishlistOpen,
   openWishlist,
   closeWishlist,
+  closeSettings,
+  settingsOpen,
+  openSettings,
 }) => {
+  const [models, setModels] = useState([
+    "DeepFashion",
+    "Dataset 2",
+    "Dataset 3",
+    "Dataset 4",
+  ]);
+
+  const [model, setModel] = useState("DeepFashion");
   const [isModelsMenuOpen, setIsModelsMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const modelsMenuRef = useRef(null);
@@ -83,24 +94,42 @@ const Menu = ({
           </span> */}
 
           <div className="relative">
-            <div
-              className="inline-flex items-center hover:bg-gray-700/50 py-2 border-2  border-gray-700 px-1 rounded-xl"
+            <button
+              className="inline-flex items-center hover:bg-gray-700/50 py-2 border-1  border-gray-600 px-1 rounded-xl"
               onClick={toggleModelsMenu}
             >
               <h1 className="text-xl text-white font-inter font-bold ml-2">
-                DeepFashion
+                {model}
               </h1>
               <span className="text-white mr-2 ml-2">
                 <IoIosArrowDown className="text-xl" />
               </span>
-            </div>
+            </button>
 
-            {isModelsMenuOpen && (
+            {/* models Menu */}
+            {isModelsMenuOpen && models.length > 1 && (
               <div
                 ref={modelsMenuRef}
-                className="absolute z-10 w-44 origin-top-left rounded-md bg-white h-20 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none active:outline-none top-full mb-3 left-2 mt-3"
+                className="absolute z-10 min-w-53 rounded-xl bg-secondary shadow-lg border border-gray-500 focus:outline-none active:outline-none top-full left-0 mt-3  px-1"
               >
-                test
+                <div className="divide-y divide-gray-500">
+                  {models
+                    .filter((modelItem) => modelItem !== model)
+                    .map((modelItem, index) => (
+                      <div
+                        key={index}
+                        className="p-1 py-2 "
+                        onClick={() => {
+                          setModel(modelItem);
+                          closeModelsMenu();
+                        }}
+                      >
+                        <div className="text-xl text-center px-6 text-white font-inter font-bold hover:bg-gray-400/60 rounded-lg p-2 py-2.5">
+                          {modelItem}
+                        </div>
+                      </div>
+                    ))}
+                </div>
               </div>
             )}
           </div>
@@ -134,7 +163,7 @@ const Menu = ({
             </span>
           </TooltipWrapper>
 
-          <div className="relative size-10 rounded-full bg-gray-300 border-2 border-gray-100 ml-4 cursor-pointer">
+          <div className="relative size-10 rounded-full bg-gray-300 border-2 border-gray-100 ml-5 cursor-pointer">
             <div
               className="w-full"
               onClick={() => {
@@ -151,9 +180,34 @@ const Menu = ({
             {isMenuOpen && (
               <div
                 ref={menuRef}
-                className="absolute z-10 w-44 origin-top-left rounded-md bg-white h-20 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none active:outline-none top-full -right-3 mt-4"
+                className="absolute z-10 min-w-45 rounded-xl bg-secondary shadow-lg border border-gray-500 focus:outline-none active:outline-none top-full -right-3 mt-4 px-3"
               >
-                test
+                <div className="divide-y divide-gray-500">
+                  <div
+                    className="p-1 cursor-pointer"
+                    onClick={() => {
+                      closeMenu()
+                      openSettings()
+                    }}
+                  >
+                    <div className="text-lg text-center text-white font-inter font-bold rounded-lg p-2 py-2.5 my-0.5">
+                      Settings
+                    </div>
+                  </div>
+
+                  <div
+                    className="p-1 cursor-pointer"
+                    onClick={() => {
+                      // handle Option 1
+                    }}
+                  >
+                    <div className="text-lg text-center text-white font-inter font-bold rounded-lg p-2 py-2.5 my-0.5">
+                      Logout
+                    </div>
+                  </div>
+
+              
+                </div>
               </div>
             )}
           </div>
@@ -165,7 +219,7 @@ const Menu = ({
         onClose={closeHistory}
         closeModal={closeHistory}
       >
-        <h1 className="text-center text-2xl">chat list</h1>
+        <h1 className="text-center text-2xl font-bold">Chat History</h1>
       </BlackModal>
 
       <BlackModal
@@ -173,7 +227,15 @@ const Menu = ({
         onClose={closeWishlist}
         closeModal={closeWishlist}
       >
-        <h3 className="text-center text-2xl">wishlist</h3>
+        <h3 className="text-center text-2xl font-bold">wishlist</h3>
+      </BlackModal>
+
+      <BlackModal
+        open={settingsOpen}
+        onClose={closeSettings}
+        closeModal={closeSettings}
+      >
+        <h3 className="text-center text-2xl font-bold">Settings</h3>
       </BlackModal>
     </div>
   );

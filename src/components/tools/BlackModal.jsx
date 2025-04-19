@@ -26,7 +26,7 @@ const BlackModal = ({ open, onClose, closeModal , children }) => {
           outline: 'none',
         }}
 
-        className="w-[70%] h-[90%] rounded-3xl bg-modal relative text-white border-1 border-gray-500"
+        className="w-[70%] h-[90%] rounded-3xl bg-modal relative text-white border-2 border-gray-500"
       >
         <span className='absolute end-0 top-0 m-3 cursor-pointer p-1 aspect-square rounded-full  text-3xl text-white hover:bg-primary' onClick={()=>{closeModal()}}> 
         <MdClose />

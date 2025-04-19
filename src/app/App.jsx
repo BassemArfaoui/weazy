@@ -17,7 +17,7 @@ const HomePage = lazy(() => import("../pages/HomePage"));
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="text-3xl font-bold">
+      <div className="text-3xl font-bold *:font-inter">
         <Router>
           <Main>
             <Suspense fallback={<PageLoader />}>
