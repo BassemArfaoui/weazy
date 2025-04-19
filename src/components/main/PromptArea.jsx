@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { HiArrowSmUp, HiOutlinePlus } from "react-icons/hi";
-import TooltipWrapper from "./TooltipWrapper";
+import TooltipWrapper from "../tools/TooltipWrapper";
 
 function PromptArea() {
   const [isUploadMenuOpen, setIsUploadMenuOpen] = useState(false);

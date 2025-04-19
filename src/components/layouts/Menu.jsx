@@ -6,7 +6,7 @@ import History from "../../assets/svg/History";
 import BlackModal from "../tools/BlackModal";
 import { FaRegHeart } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
-import TooltipWrapper from "../main/TooltipWrapper";
+import TooltipWrapper from "../tools/TooltipWrapper";
 
 const Menu = ({
   historyOpen,
