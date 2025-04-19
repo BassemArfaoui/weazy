@@ -3,6 +3,8 @@ import { HiArrowSmUp, HiOutlinePlus } from 'react-icons/hi';
 
 function PromptArea() {
   const [isUploadMenuOpen, setIsUploadMenuOpen] = useState(false);
+  const [option , setOption] = useState('')
+  
   const uploadMenuRef = useRef(null);
 
   const toggleUploadMenu = () => {
@@ -12,6 +14,17 @@ function PromptArea() {
   const closeUploadMenu = () => {
     setIsUploadMenuOpen(false);
   };
+
+    const toggleSearchOption = () =>
+    {
+      setOption((prev) => prev === 'search' ? '' : 'search')
+    }
+
+    const toggleRecommendOption = () =>
+    {
+      setOption((prev) => prev === 'recommend' ? '' : 'recommend')
+    }
+ 
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -41,7 +54,7 @@ function PromptArea() {
 
       <div className="w-full flex items-center justify-between px-6 font-medium text-lg text-inter py-3 gap-3">
         <div className="flex gap-3 items-center justify-center">
-          <div className="inline-flex relative" ref={uploadMenuRef}>
+          <div className="inline-flex relative mr-2" ref={uploadMenuRef}>
             <button
               className="p-2 aspect-square rounded-full flex justify-center items-center border-gray-500 cursor-pointer hover:bg-gray-500/20 gap-1 size-10 border-1"
               onClick={toggleUploadMenu}
@@ -58,8 +71,12 @@ function PromptArea() {
             )}
           </div>
 
-          <button className="border-1 px-3 py-1 rounded-3xl flex justify-center items-center border-gray-500 cursor-pointer hover:bg-gray-500/20 gap-1 h-10">
+          <button className={`border-1 px-3 py-1 rounded-3xl flex justify-center items-center border-gray-500 ${option === "search" ? "bg-gray-200 text-secondary hover:bg-gray-200" : "hover:bg-gray-500/20"} cursor-pointer  gap-1 h-10`} onClick={toggleSearchOption}>
             <span className="text-md flex items-center">Search</span>
+          </button>
+
+          <button className={`border-1 px-3 py-1 rounded-3xl flex justify-center items-center border-gray-500 ${option === "recommend" ? "bg-gray-200 text-secondary hover:bg-gray-200" : "hover:bg-gray-500/20"} cursor-pointer  gap-1 h-10`} onClick={toggleRecommendOption}>
+            <span className="text-md flex items-center">Recommend</span>
           </button>
         </div>
 

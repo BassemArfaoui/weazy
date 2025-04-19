@@ -1,6 +1,6 @@
 import { IoIosArrowDown } from "react-icons/io";
 import profile from "../../assets/images/profile.png";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import NewChat from "../../assets/svg/NewChat";
 import History from "../../assets/svg/History";
 import BlackModal from "../tools/BlackModal";
@@ -9,7 +9,9 @@ import { useEffect, useRef, useState } from "react";
 
 const Menu = ({ open, openHistory, closeHistory }) => {
   const [isModelsMenuOpen, setIsModelsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const modelsMenuRef = useRef(null);
+  const menuRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -17,10 +19,21 @@ const Menu = ({ open, openHistory, closeHistory }) => {
     setIsModelsMenuOpen((prev) => !prev);
   };
 
+  const togglMenu = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
+
+  const openMenu = () => {
+    setIsMenuOpen(true);
+  };
+
   const closeModelsMenu = () => {
     setIsModelsMenuOpen(false);
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -32,8 +45,20 @@ const Menu = ({ open, openHistory, closeHistory }) => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutsideMenu = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        closeMenu();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutsideMenu);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutsideMenu);
   }, []);
 
   return (
@@ -50,7 +75,10 @@ const Menu = ({ open, openHistory, closeHistory }) => {
           </span> */}
 
           <div className="relative">
-            <div className="inline-flex items-center hover:bg-gray-700/50 py-2 border-2  border-gray-700 px-1 rounded-xl" onClick={toggleModelsMenu}>
+            <div
+              className="inline-flex items-center hover:bg-gray-700/50 py-2 border-2  border-gray-700 px-1 rounded-xl"
+              onClick={toggleModelsMenu}
+            >
               <h1 className="text-xl text-white font-inter font-bold ml-2">
                 DeepFashion
               </h1>
@@ -60,13 +88,16 @@ const Menu = ({ open, openHistory, closeHistory }) => {
             </div>
 
             {isModelsMenuOpen && (
-              <div ref={modelsMenuRef} className="absolute z-10 w-44 origin-top-left rounded-md bg-white h-20 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none active:outline-none top-full mb-3 left-2 mt-3">
+              <div
+                ref={modelsMenuRef}
+                className="absolute z-10 w-44 origin-top-left rounded-md bg-white h-20 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none active:outline-none top-full mb-3 left-2 mt-3"
+              >
                 test
               </div>
             )}
           </div>
         </div>
-        <div className="mr-3 flex  gap-5 items-center">
+        <div className="mr-3 flex  gap-5 items-center ">
           <span className="cursor-pointer">
             <NewChat />
           </span>
@@ -82,12 +113,23 @@ const Menu = ({ open, openHistory, closeHistory }) => {
             <FaRegHeart className=" w-[26px]" />
           </span>
 
-          <div className="size-10 rounded-full bg-gray-300 border-2 border-gray-100 ml-4">
-            <img
-              src={profile}
-              alt="profile"
-              className="rounded-full w-full h-full"
-            />
+          <div className="relative size-10 rounded-full bg-gray-300 border-2 border-gray-100 ml-4 cursor-pointer">
+            <div className="w-full" onClick={()=>{openMenu()}}>
+              <img
+                src={profile}
+                alt="profile"
+                className="rounded-full w-full h-full"
+              />
+            </div>
+
+            {isMenuOpen && (
+              <div
+                ref={menuRef}
+                className="absolute z-10 w-44 origin-top-left rounded-md bg-white h-20 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none active:outline-none top-full -right-3 mt-4"
+              >
+                test
+              </div>
+            )}
           </div>
         </div>
       </div>
