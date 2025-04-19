@@ -6,7 +6,7 @@ import ChatArea from '../components/main/ChatArea';
 
 function HomePage() {
   return (
-    <div className="h-full w-full px-12 flex-col flex justify-between items-center gap-1">
+    <div className="h-full w-full px-0 flex-col flex justify-between items-center gap-1">
 
        <ChatArea />
 

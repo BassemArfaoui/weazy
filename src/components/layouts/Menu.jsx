@@ -6,8 +6,16 @@ import History from "../../assets/svg/History";
 import BlackModal from "../tools/BlackModal";
 import { FaRegHeart } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
+import TooltipWrapper from "../main/TooltipWrapper";
 
-const Menu = ({ open, openHistory, closeHistory }) => {
+const Menu = ({
+  historyOpen,
+  openHistory,
+  closeHistory,
+  wishlistOpen,
+  openWishlist,
+  closeWishlist,
+}) => {
   const [isModelsMenuOpen, setIsModelsMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const modelsMenuRef = useRef(null);
@@ -97,24 +105,42 @@ const Menu = ({ open, openHistory, closeHistory }) => {
             )}
           </div>
         </div>
-        <div className="mr-3 flex  gap-5 items-center ">
-          <span className="cursor-pointer">
-            <NewChat />
-          </span>
-          <span
-            className="cursor-pointer"
-            onClick={() => {
-              openHistory();
-            }}
-          >
-            <History />
-          </span>
-          <span className="cursor-pointer">
-            <FaRegHeart className=" w-[26px]" />
-          </span>
+        <div className="mr-3 flex  gap-2 items-center ">
+          <TooltipWrapper tooltip="New Chat" placement="bottom">
+            <span className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl">
+              <NewChat />
+            </span>
+          </TooltipWrapper>
+
+          <TooltipWrapper tooltip="Chat History" placement="bottom">
+            <span
+              className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
+              onClick={() => {
+                openHistory();
+              }}
+            >
+              <History />
+            </span>
+          </TooltipWrapper>
+
+          <TooltipWrapper tooltip="Wishlist" placement="bottom">
+            <span
+              className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
+              onClick={() => {
+                openWishlist();
+              }}
+            >
+              <FaRegHeart className=" w-[26px]" />
+            </span>
+          </TooltipWrapper>
 
           <div className="relative size-10 rounded-full bg-gray-300 border-2 border-gray-100 ml-4 cursor-pointer">
-            <div className="w-full" onClick={()=>{openMenu()}}>
+            <div
+              className="w-full"
+              onClick={() => {
+                openMenu();
+              }}
+            >
               <img
                 src={profile}
                 alt="profile"
@@ -134,8 +160,20 @@ const Menu = ({ open, openHistory, closeHistory }) => {
         </div>
       </div>
 
-      <BlackModal open={open} onClose={closeHistory} closeModal={closeHistory}>
-        test
+      <BlackModal
+        open={historyOpen}
+        onClose={closeHistory}
+        closeModal={closeHistory}
+      >
+        <h1 className="text-center text-2xl">chat list</h1>
+      </BlackModal>
+
+      <BlackModal
+        open={wishlistOpen}
+        onClose={closeWishlist}
+        closeModal={closeWishlist}
+      >
+        <h3 className="text-center text-2xl">wishlist</h3>
       </BlackModal>
     </div>
   );

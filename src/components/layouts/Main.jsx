@@ -5,10 +5,16 @@ import Menu from './Menu';
 const Main = ({ children }) => {
 
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
 
   const openHistory = () =>
   {
     setIsHistoryOpen(true);
+  }
+
+  const openWishlist = () =>
+  {
+    setIsWishlistOpen(true);
   }
 
   const closeHistory = () =>
@@ -16,13 +22,18 @@ const Main = ({ children }) => {
     setIsHistoryOpen(false);
   }
 
+  const closeWishlist = () =>
+  {
+    setIsWishlistOpen(false);
+  }
+
   return (
     <div className="flex flex-col h-screen">
-      <Menu  open={isHistoryOpen}  openHistory={openHistory} closeHistory={closeHistory} />
+      <Menu  historyOpen={isHistoryOpen}  wishlistOpen={isWishlistOpen} openWishlist={openWishlist} closeWishlist={closeWishlist}  openHistory={openHistory} closeHistory={closeHistory} />
 
       <div className="flex flex-1 overflow-hidden">
 
-        <div className="flex-1 overflow-y-auto px-20 md:px-5 bg-primary text-white">
+        <div className="flex-1 overflow-y-auto px-10 md:px-5 bg-primary text-white">
 
           {children}
         </div>
