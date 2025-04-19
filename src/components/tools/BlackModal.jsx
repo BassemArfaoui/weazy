@@ -11,6 +11,7 @@ const BlackModal = ({ open, onClose, closeModal , children }) => {
       BackdropProps={{
         sx: {
           backgroundColor: 'transparent', 
+          backdropFilter: 'blur(2pt)', 
         },
       }}
     >
