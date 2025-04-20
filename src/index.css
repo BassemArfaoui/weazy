@@ -9,8 +9,8 @@
   --font-roboto-mono:  "Roboto Mono", monospace;
   --font-inter: "inter" , ui-sans-serif, -apple-system , system-ui, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"  ;
 
-  --color-secondary : #3a3b3d;
   --color-primary : #1c1d1f;
+  --color-secondary : #3a3b3d;
   --color-modal : #2f3032 ;
   --color-dark : #0d0d0d ;
   

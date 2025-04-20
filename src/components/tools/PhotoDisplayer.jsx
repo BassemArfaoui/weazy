@@ -14,7 +14,7 @@ const PhotoDisplayer = ({ open, onClose, imageSrc }) => {
       BackdropProps={{
         sx: {
           backgroundColor: 'transparent',
-          backdropFilter: 'blur(6px)',
+          backdropFilter: 'blur(15px)',
         },
       }}
     >
