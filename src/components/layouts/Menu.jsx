@@ -5,7 +5,7 @@ import NewChat from "../../assets/svg/NewChat";
 import History from "../../assets/svg/History";
 import BlackModal from "../tools/BlackModal";
 import { FaRegHeart } from "react-icons/fa";
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import TooltipWrapper from "../tools/TooltipWrapper";
 
 const Menu = ({
@@ -32,18 +32,13 @@ const Menu = ({
   const modelsMenuRef = useRef(null);
   const menuRef = useRef(null);
 
-  const navigate = useNavigate();
 
   const toggleModelsMenu = () => {
     setIsModelsMenuOpen((prev) => !prev);
   };
 
-  const togglMenu = () => {
+  const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
-  };
-
-  const openMenu = () => {
-    setIsMenuOpen(true);
   };
 
   const closeModelsMenu = () => {
@@ -82,20 +77,11 @@ const Menu = ({
 
   return (
     <div>
-      <div className="p-8 h-15 text-white flex items-center justify-between py-8  bg-primary shadow-md pt-10">
+      <div className="p-8 h-15 text-white flex items-center justify-between py-8 bg-primary shadow-md pt-10">
         <div className="flex items-center cursor-pointer">
-          {/*
-        <span className="text-stone-900 mr-2 ml-1">
-            <FaPlus className="text-2xl"/>
-          </span> */}
-          {/*
-          <span className="text-blue-500 mr-2 ml-1">
-            <PiGlobeDuotone className="text-4xl"/>
-          </span> */}
-
-          <div className="relative">
+          <div ref={modelsMenuRef} className="relative">
             <button
-              className="inline-flex items-center hover:bg-gray-700/50 py-2 border-1  border-gray-600 px-1 rounded-xl"
+              className="inline-flex items-center hover:bg-gray-700/50 py-2 border-1 border-gray-600 px-1 rounded-xl"
               onClick={toggleModelsMenu}
             >
               <h1 className="text-xl text-white font-inter font-bold ml-2">
@@ -108,23 +94,20 @@ const Menu = ({
 
             {/* models Menu */}
             {isModelsMenuOpen && models.length > 1 && (
-              <div
-                ref={modelsMenuRef}
-                className="absolute z-10 min-w-53 rounded-xl bg-secondary shadow-lg border border-gray-500 focus:outline-none active:outline-none top-full left-0 mt-3  px-1"
-              >
+              <div className="absolute z-10 min-w-53 rounded-xl bg-secondary shadow-lg border border-gray-500 top-full left-0 mt-3 px-1">
                 <div className="divide-y divide-gray-500">
                   {models
                     .filter((modelItem) => modelItem !== model)
                     .map((modelItem, index) => (
                       <div
                         key={index}
-                        className="p-1 py-2 "
+                        className="p-1 py-2"
                         onClick={() => {
                           setModel(modelItem);
                           closeModelsMenu();
                         }}
                       >
-                        <div className="text-xl text-center px-6 text-white font-inter font-bold hover:bg-gray-400/60 rounded-lg p-2 py-2.5">
+                        <div className="text-xl text-center px-6 text-white font-inter font-bold hover:bg-gray-400/40 rounded-lg p-2 py-2.5">
                           {modelItem}
                         </div>
                       </div>
@@ -134,7 +117,8 @@ const Menu = ({
             )}
           </div>
         </div>
-        <div className="mr-3 flex  gap-2 items-center ">
+
+        <div className="mr-3 flex gap-2 items-center">
           <TooltipWrapper tooltip="New Chat" placement="bottom">
             <span className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl">
               <NewChat />
@@ -144,9 +128,7 @@ const Menu = ({
           <TooltipWrapper tooltip="Chat History" placement="bottom">
             <span
               className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
-              onClick={() => {
-                openHistory();
-              }}
+              onClick={openHistory}
             >
               <History />
             </span>
@@ -155,58 +137,43 @@ const Menu = ({
           <TooltipWrapper tooltip="Wishlist" placement="bottom">
             <span
               className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
-              onClick={() => {
-                openWishlist();
-              }}
+              onClick={openWishlist}
             >
-              <FaRegHeart className=" w-[26px]" />
+              <FaRegHeart className="w-[26px]" />
             </span>
           </TooltipWrapper>
 
-          <div className="relative size-10 rounded-full bg-gray-300 border-2 border-gray-100 ml-5 cursor-pointer">
-            <div
-              className="w-full"
-              onClick={() => {
-                openMenu();
-              }}
-            >
+          {/* Profile Menu */}
+          <div ref={menuRef} className="relative ml-5 cursor-pointer size-10">
+            <div className="rounded-full bg-gray-300 border-2 border-gray-100 w-full h-full overflow-hidden">
               <img
                 src={profile}
                 alt="profile"
                 className="rounded-full w-full h-full"
+                onClick={toggleMenu}
               />
             </div>
 
             {isMenuOpen && (
-              <div
-                ref={menuRef}
-                className="absolute z-10 min-w-45 rounded-xl bg-secondary shadow-lg border border-gray-500 focus:outline-none active:outline-none top-full -right-3 mt-4 px-3"
-              >
+              <div className="absolute z-10 min-w-45 rounded-xl bg-secondary shadow-lg border border-gray-500 top-full -right-3 mt-4 px-1">
                 <div className="divide-y divide-gray-500">
                   <div
                     className="p-1 cursor-pointer"
                     onClick={() => {
-                      closeMenu()
-                      openSettings()
+                      closeMenu();
+                      openSettings();
                     }}
                   >
-                    <div className="text-lg text-center text-white font-inter font-bold rounded-lg p-2 py-2.5 my-0.5">
+                    <div className="text-lg text-center text-white font-inter font-bold rounded-lg p-2 py-2.5 my-0.5 hover:bg-gray-400/40">
                       Settings
                     </div>
                   </div>
 
-                  <div
-                    className="p-1 cursor-pointer"
-                    onClick={() => {
-                      // handle Option 1
-                    }}
-                  >
-                    <div className="text-lg text-center text-white font-inter font-bold rounded-lg p-2 py-2.5 my-0.5">
+                  <div className="p-1 cursor-pointer">
+                    <div className="text-lg text-center text-white font-inter font-bold rounded-lg p-2 py-2.5 my-0.5 hover:bg-gray-400/40">
                       Logout
                     </div>
                   </div>
-
-              
                 </div>
               </div>
             )}
@@ -214,6 +181,7 @@ const Menu = ({
         </div>
       </div>
 
+      {/* MODALS */}
       <BlackModal
         open={historyOpen}
         onClose={closeHistory}
@@ -227,7 +195,7 @@ const Menu = ({
         onClose={closeWishlist}
         closeModal={closeWishlist}
       >
-        <h3 className="text-center text-2xl font-bold">wishlist</h3>
+        <h3 className="text-center text-2xl font-bold">Wishlist</h3>
       </BlackModal>
 
       <BlackModal
