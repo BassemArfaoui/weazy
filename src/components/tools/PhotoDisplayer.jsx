@@ -55,6 +55,7 @@ const PhotoDisplayer = ({ open, onClose, imageSrc }) => {
             alt="Displayed"
             className="object-contain max-w-full max-h-full rounded-3xl"
           />
+          
         </div>
       </Box>
     </Modal>
