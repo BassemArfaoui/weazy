@@ -3,7 +3,6 @@ import { Modal, Box } from '@mui/material';
 import { MdClose } from "react-icons/md";
 
 const PhotoDisplayer = ({ open, onClose, imageSrc }) => {
-  // This function will stop the click event from bubbling to the outer container
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
@@ -20,7 +19,7 @@ const PhotoDisplayer = ({ open, onClose, imageSrc }) => {
       }}
     >
       <Box
-        onClick={onClose} // clicking on the backdrop closes
+        onClick={onClose}
         sx={{
           position: 'absolute',
           top: '50%',
@@ -48,14 +47,14 @@ const PhotoDisplayer = ({ open, onClose, imageSrc }) => {
           <MdClose />
         </span>
 
-        {/* Image (clicking here won’t close modal) */}
+        {/* Image */}
         <div className="relative p-10" onClick={stopPropagation}>
           <img
             src={imageSrc}
             alt="Displayed"
             className="object-contain max-w-full max-h-full rounded-3xl"
           />
-          
+
         </div>
       </Box>
     </Modal>
