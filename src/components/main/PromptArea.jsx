@@ -100,7 +100,7 @@ function PromptArea() {
     <div className="bg-secondary w-full max-w-[800px] border-1 border-gray-500 rounded-3xl items-center justify-between text-inter text-xl text-gray-300 flex flex-col gap-1 mb-10 pb-1 pt-5">
       {/* Uploaded Images Area */}
       {uploadedImages.length > 0 && (
-        <div className="flex gap-4 flex-wrap justify-start px-9 pb-5 w-full">
+        <div className="flex gap-4 flex-wrap justify-start px-7 pb-3 w-full">
           {uploadedImages.map((src, index) => (
             <div key={index} className="relative size-17 rounded-lg  border border-gray-500">
               <img
