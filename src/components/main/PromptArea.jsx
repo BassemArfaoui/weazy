@@ -2,11 +2,14 @@ import React, { useState, useRef, useEffect } from "react";
 import { HiArrowSmUp, HiOutlinePlus } from "react-icons/hi";
 import TooltipWrapper from "../tools/TooltipWrapper";
 import { IoMdClose } from "react-icons/io";
+import PhotoDisplayer from "../tools/PhotoDisplayer";
 
 function PromptArea() {
   const [isUploadMenuOpen, setIsUploadMenuOpen] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [option, setOption] = useState("");
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false); 
+  const [selectedImage, setSelectedImage] = useState(null); 
 
   const uploadMenuRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -46,7 +49,6 @@ function PromptArea() {
     const imagePreviews = imageFiles.map((file) => URL.createObjectURL(file));
     setUploadedImages((prev) => [...prev, ...imagePreviews]);
 
-    // Reset input value to allow re-uploading the same file
     event.target.value = "";
   };
 
@@ -58,7 +60,6 @@ function PromptArea() {
         const file = item.getAsFile();
         const imagePreview = URL.createObjectURL(file);
         
-        // Check if the total number of images exceeds 3
         if (uploadedImages.length < 3) {
           setUploadedImages((prev) => [...prev, imagePreview]);
         } else {
@@ -72,6 +73,16 @@ function PromptArea() {
     setUploadedImages((prev) =>
       prev.filter((_, index) => index !== indexToRemove)
     );
+  };
+
+  const openPhotoModal = (image) => {
+    setSelectedImage(image);
+    setIsPhotoModalOpen(true);
+  };
+
+  const closePhotoModal = () => {
+    setIsPhotoModalOpen(false);
+    setSelectedImage(null);
   };
 
   useEffect(() => {
@@ -88,7 +99,6 @@ function PromptArea() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Listen to the paste event on the component
   useEffect(() => {
     const handlePasteEvent = (event) => handlePaste(event);
 
@@ -102,11 +112,12 @@ function PromptArea() {
       {uploadedImages.length > 0 && (
         <div className="flex gap-4 flex-wrap justify-start px-7 pb-3 w-full">
           {uploadedImages.map((src, index) => (
-            <div key={index} className="relative size-17 rounded-lg  border border-gray-500">
+            <div key={index} className="relative size-17 rounded-lg border border-gray-500">
               <img
                 src={src}
                 alt={`upload-${index}`}
-                className="object-cover w-full  rounded-lg h-full"
+                className="object-cover w-full rounded-lg h-full cursor-pointer"
+                onClick={() => openPhotoModal(src)} 
               />
               <button
                 className="absolute z-100 -top-2 -right-2 cursor-pointer bg-black bg-opacity-60 text-white rounded-full p-1 hover:bg-opacity-80 flex justify-center items-center"
@@ -206,6 +217,13 @@ function PromptArea() {
           </TooltipWrapper>
         </div>
       </div>
+
+      {/*Image Modal */}
+      <PhotoDisplayer
+        open={isPhotoModalOpen}
+        onClose={closePhotoModal}
+        imageSrc={selectedImage}
+      />
     </div>
   );
 }
