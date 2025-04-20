@@ -4,12 +4,13 @@ import TooltipWrapper from "../tools/TooltipWrapper";
 import { IoMdClose } from "react-icons/io";
 import PhotoDisplayer from "../tools/PhotoDisplayer";
 
-function PromptArea() {
+function PromptArea({ conversation, setConversation , setIsGenerating}) {
   const [isUploadMenuOpen, setIsUploadMenuOpen] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [option, setOption] = useState("search");
-  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false); 
-  const [selectedImage, setSelectedImage] = useState(null); 
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [promptText, setPromptText] = useState("");
 
   const uploadMenuRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -32,7 +33,6 @@ function PromptArea() {
 
   const handleFileUpload = (event) => {
     const files = Array.from(event.target.files);
-
     const imageFiles = files.filter((file) => file.type.startsWith("image/"));
     const invalidFiles = files.filter((file) => !file.type.startsWith("image/"));
 
@@ -59,7 +59,7 @@ function PromptArea() {
       if (item.type.startsWith("image/")) {
         const file = item.getAsFile();
         const imagePreview = URL.createObjectURL(file);
-        
+
         if (uploadedImages.length < 3) {
           setUploadedImages((prev) => [...prev, imagePreview]);
         } else {
@@ -85,6 +85,41 @@ function PromptArea() {
     setSelectedImage(null);
   };
 
+  const handleSubmit = () => {
+    if (!promptText.trim() && uploadedImages.length === 0) return;
+
+    const newMessage = {
+      id: conversation.length + 1,
+      sender: "user",
+      message: promptText.trim(),
+      image_urls: uploadedImages,
+    };
+
+    setConversation((prev) => [...prev, newMessage]);
+    setPromptText("");
+    setUploadedImages([]);
+    setIsGenerating(true); 
+
+    setTimeout(() => {
+      setConversation((prev) => [
+        ...prev,
+        {
+          id: prev.length + 1,
+          sender: "bot",
+          message: "Here’s your awesome result",
+        },
+      ]);
+      setIsGenerating(false); 
+    }, 10000); 
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault(); 
+      handleSubmit();
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -108,7 +143,7 @@ function PromptArea() {
 
   return (
     <div className="bg-secondary w-full max-w-[800px] border-1 border-gray-500 rounded-3xl items-center justify-between text-inter text-xl text-gray-300 flex flex-col gap-1 mb-10 pb-1 pt-2">
-      {/* Uploaded Images Area */}
+      {/* Images Area */}
       {uploadedImages.length > 0 && (
         <div className="flex gap-4 flex-wrap justify-start px-7 pb-3 w-full">
           {uploadedImages.map((src, index) => (
@@ -117,7 +152,7 @@ function PromptArea() {
                 src={src}
                 alt={`upload-${index}`}
                 className="object-cover w-full rounded-lg h-full cursor-pointer"
-                onClick={() => openPhotoModal(src)} 
+                onClick={() => openPhotoModal(src)}
               />
               <button
                 className="absolute z-100 -top-2 -right-2 cursor-pointer bg-black bg-opacity-60 text-white rounded-full p-1 hover:bg-opacity-80 flex justify-center items-center"
@@ -137,6 +172,9 @@ function PromptArea() {
           placeholder="Speak anything in your mind"
           style={{ resize: "none" }}
           className="bg-transparent flex items-center pt-3 text-inter w-full flex-1 border-none outline-none text-gray-300 text-lg"
+          value={promptText}
+          onChange={(e) => setPromptText(e.target.value)}
+          onKeyDown={handleKeyDown} 
         />
       </div>
 
@@ -211,14 +249,17 @@ function PromptArea() {
 
         <div className="flex items-center">
           <TooltipWrapper tooltip="Submit" placement="right">
-            <button className="border-1 p-1 flex justify-center items-center border-gray-500 cursor-pointer gap-1 aspect-square rounded-full bg-white text-gray-950 size-10">
+            <button
+              onClick={handleSubmit}
+              className="border-1 p-1 flex justify-center items-center border-gray-500 cursor-pointer gap-1 aspect-square rounded-full bg-white text-gray-950 size-10"
+            >
               <HiArrowSmUp className="text-3xl" />
             </button>
           </TooltipWrapper>
         </div>
       </div>
 
-      {/*Image Modal */}
+      {/* Image Modal */}
       <PhotoDisplayer
         open={isPhotoModalOpen}
         onClose={closePhotoModal}

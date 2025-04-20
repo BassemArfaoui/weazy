@@ -1,70 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import PhotoDisplayer from '../tools/PhotoDisplayer';
+import PulseLoader from "../tools/PulseLoader";
 
-function ChatArea() {
-  const [conversation, setConversation] = useState([
-    {
-      id: 1,
-      sender: 'user',
-      message: 'Show me sneakers under $100.',
-      image_urls: [
-        'https://picsum.photos/seed/user1/150',
-        'https://picsum.photos/seed/user5/151',
-        'https://picsum.photos/seed/user3/152',
-      ],
-    },
-    {
-      id: 2,
-      sender: 'bot',
-      message: 'Sure! Here are some top-rated sneakers under $100.',
-      image_urls: []   
-     },
-    {
-      id: 3,
-      sender: 'user',
-      message: 'I prefer white ones.',
-      image_urls: ['https://picsum.photos/seed/userwhite/150'],
-    },
-    {
-      id: 4,
-      sender: 'bot',
-      message: 'Got it! Filtering for white sneakers now.',
-    },
-    {
-      id: 5,
-      sender: 'bot',
-      message: 'Do you have a preferred brand?',
-    },
-    {
-      id: 6,
-      sender: 'user',
-      message: 'Nike, preferably.',
-      image_urls: ['https://picsum.photos/seed/nikelogo/150'],
-    },
-    {
-      id: 7,
-      sender: 'bot',
-      message: 'Perfect! Showing white Nike sneakers under $100.',
-      image_urls: [
-      ],
-    },
-    {
-      id: 8,
-      sender: 'bot',
-      message: 'Here are some popular models: Air Max, Revolution 6, and Court Vision.',
-    },
-    {
-      id: 9,
-      sender: 'user',
-      message: 'Show me only Air Max.',
-      image_urls: ['https://picsum.photos/seed/airmaxuser/150'],
-    },
-    {
-      id: 10,
-      sender: 'bot',
-      message: 'Filtered! Only showing Nike Air Max under $100 in white.',
-      image_urls: [],
-    },
-  ]);
+function ChatArea({ conversation, setConversation, isGenerating }) {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
+
+  const lastMessageRef = useRef(null); 
+
+  const openPhotoModal = (img) => {
+    setSelectedImage(img);
+    setIsPhotoModalOpen(true);
+  };
+
+  const closePhotoModal = () => {
+    setSelectedImage(null);
+    setIsPhotoModalOpen(false);
+  };
+
+
+  useEffect(() => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [conversation]);  
 
   return (
     <div className="w-full h-full overflow-y-auto px-4 py-6 pb-20">
@@ -77,22 +36,22 @@ function ChatArea() {
             <div className="text-gray-300 text-center">What do you want to find today?</div>
           </>
         ) : (
-          conversation.map((msg) => (
+          conversation.map((msg, index) => (
             <div
               key={msg.id + Math.random()}
-              className={`flex flex-col gap-2 ${
-                msg.sender === 'user' ? 'items-end' : 'items-start'
-              }`}
+              className={`flex flex-col gap-2 ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
             >
-              <div
-                className={`max-w-[70%] rounded-2xl px-4 py-3 text-base ${
-                  msg.sender === 'user'
-                    ? 'bg-gray-700 text-gray-100 rounded-br-none'
-                    : 'bg-primary text-white rounded-bl-none'
-                }`}
-              >
-                {msg.message}
-              </div>
+              {msg.message && (
+                <div
+                  className={`max-w-[70%] rounded-2xl px-4 py-3 text-base ${
+                    msg.sender === 'user'
+                      ? 'bg-gray-700 text-gray-100 rounded-br-none'
+                      : 'bg-primary text-white rounded-bl-none'
+                  }`}
+                >
+                  {msg.message}
+                </div>
+              )}
 
               {msg.image_urls && msg.image_urls.length > 0 && (
                 <div className="flex flex-wrap gap-2">
@@ -101,15 +60,31 @@ function ChatArea() {
                       key={index}
                       src={url}
                       alt={`preview-${index}`}
-                      className="w-28 h-28 object-cover rounded-lg border border-white/10"
+                      onClick={() => openPhotoModal(url)}
+                      className="w-28 h-28 object-cover rounded-lg border border-white/10 cursor-pointer hover:brightness-110 transition duration-150"
                     />
                   ))}
                 </div>
               )}
+              {index === conversation.length - 1 && (
+                <div ref={lastMessageRef} />  
+              )}
             </div>
           ))
         )}
+
+        {isGenerating && (
+          <div className="w-full flex items-center pb-4">
+            <PulseLoader />
+          </div>
+        )}
       </div>
+
+      <PhotoDisplayer
+        open={isPhotoModalOpen}
+        onClose={closePhotoModal}
+        imageSrc={selectedImage}
+      />
     </div>
   );
 }

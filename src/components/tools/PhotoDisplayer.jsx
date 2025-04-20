@@ -48,7 +48,7 @@ const PhotoDisplayer = ({ open, onClose, imageSrc }) => {
         </span>
 
         {/* Image */}
-        <div className="relative p-10" onClick={stopPropagation}>
+        <div className="relative p-10 md:max-w-[500px]" onClick={stopPropagation}>
           <img
             src={imageSrc}
             alt="Displayed"
