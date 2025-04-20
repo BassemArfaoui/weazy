@@ -7,7 +7,7 @@ import PhotoDisplayer from "../tools/PhotoDisplayer";
 function PromptArea() {
   const [isUploadMenuOpen, setIsUploadMenuOpen] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
-  const [option, setOption] = useState("");
+  const [option, setOption] = useState("search");
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false); 
   const [selectedImage, setSelectedImage] = useState(null); 
 
