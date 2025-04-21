@@ -1,0 +1,48 @@
+$duration: 750ms;
+
+
+.apple-loading {
+  position: relative;
+  width: 48px;
+  height: 48px;
+
+  &-container {
+    display: flex;
+
+    &.center {
+      justify-content: center;
+    }
+  }
+
+  .segment {
+    position: absolute;
+    left: 22px;
+    height: 14px;
+    width: 4px;
+    background-color: rgba(234, 234, 234, 0.3);
+    border-radius: 10px;
+    -webkit-transform-origin-y: 170%;
+    animation-duration: $duration;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-name: throbber;
+
+    &:nth-child(1)   { transform: rotate(0deg);   animation-delay: 0ms; }
+    &:nth-child(2)   { transform: rotate(30deg);  animation-delay: 62ms; }
+    &:nth-child(3)   { transform: rotate(60deg);  animation-delay: 125ms; }
+    &:nth-child(4)   { transform: rotate(90deg);  animation-delay: 187ms; }
+    &:nth-child(5)   { transform: rotate(120deg); animation-delay: 250ms; }
+    &:nth-child(6)   { transform: rotate(150deg); animation-delay: 312ms; }
+    &:nth-child(7)   { transform: rotate(180deg); animation-delay: 375ms; }
+    &:nth-child(8)   { transform: rotate(210deg); animation-delay: 437ms; }
+    &:nth-child(9)   { transform: rotate(240deg); animation-delay: 500ms; }
+    &:nth-child(10)  { transform: rotate(270deg); animation-delay: 562ms; }
+    &:nth-child(11)  { transform: rotate(300deg); animation-delay: 625ms; }
+    &:nth-child(12)  { transform: rotate(330deg); animation-delay: 687ms; }
+  }
+}
+
+@keyframes throbber {
+  0%   { background-color: #808080; }
+  100% { background-color: white; }
+}
