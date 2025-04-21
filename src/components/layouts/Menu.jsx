@@ -1,6 +1,6 @@
 import { IoIosArrowDown } from "react-icons/io";
 import profile from "../../assets/images/profile.png";
-import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import NewChat from "../../assets/svg/NewChat";
 import History from "../../assets/svg/History";
 import BlackModal from "../tools/BlackModal";
@@ -19,46 +19,49 @@ const Menu = ({
   settingsOpen,
   openSettings,
 }) => {
-  const [models, setModels] = useState([
+  const [searchParams, setSearchParams] = useSearchParams();
+  const paramModel = searchParams.get("model");
+
+  const [models] = useState([
     "DeepFashion",
     "Dataset 2",
     "Dataset 3",
     "Dataset 4",
   ]);
 
-  const [model, setModel] = useState("DeepFashion");
+  const [model, setModel] = useState(
+    paramModel && models.includes(paramModel) ? paramModel : models[0]
+  );
+
   const [isModelsMenuOpen, setIsModelsMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const modelsMenuRef = useRef(null);
   const menuRef = useRef(null);
 
+  const toggleModelsMenu = () => setIsModelsMenuOpen((prev) => !prev);
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+  const closeModelsMenu = () => setIsModelsMenuOpen(false);
+  const closeMenu = () => setIsMenuOpen(false);
 
-  const toggleModelsMenu = () => {
-    setIsModelsMenuOpen((prev) => !prev);
+  const handleModelChange = (selectedModel) => {
+    setModel(selectedModel);
+    setSearchParams({ model: selectedModel });
+    closeModelsMenu();
   };
 
-  const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
-  };
-
-  const closeModelsMenu = () => {
-    setIsModelsMenuOpen(false);
-  };
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
+  // Optional: clean up invalid model from URL
+  useEffect(() => {
+    if (!models.includes(paramModel)) {
+      setSearchParams({ model: models[0] });
+    }
+  }, [paramModel, models, setSearchParams]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        modelsMenuRef.current &&
-        !modelsMenuRef.current.contains(event.target)
-      ) {
+      if (modelsMenuRef.current && !modelsMenuRef.current.contains(event.target)) {
         closeModelsMenu();
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -69,10 +72,8 @@ const Menu = ({
         closeMenu();
       }
     };
-
     document.addEventListener("mousedown", handleClickOutsideMenu);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutsideMenu);
+    return () => document.removeEventListener("mousedown", handleClickOutsideMenu);
   }, []);
 
   return (
@@ -92,7 +93,6 @@ const Menu = ({
               </span>
             </button>
 
-            {/* models Menu */}
             {isModelsMenuOpen && models.length > 1 && (
               <div className="absolute z-10 min-w-53 rounded-xl bg-secondary shadow-lg border border-gray-500 top-full left-0 mt-3 px-1">
                 <div className="divide-y divide-gray-500">
@@ -102,10 +102,7 @@ const Menu = ({
                       <div
                         key={index}
                         className="p-1 py-2"
-                        onClick={() => {
-                          setModel(modelItem);
-                          closeModelsMenu();
-                        }}
+                        onClick={() => handleModelChange(modelItem)}
                       >
                         <div className="text-xl text-center px-6 text-white font-inter font-bold hover:bg-gray-400/40 rounded-lg p-2 py-2.5">
                           {modelItem}
@@ -143,7 +140,6 @@ const Menu = ({
             </span>
           </TooltipWrapper>
 
-          {/* Profile Menu */}
           <div ref={menuRef} className="relative ml-5 cursor-pointer size-10">
             <div className="rounded-full bg-gray-300 border-2 border-gray-100 w-full h-full overflow-hidden">
               <img
@@ -182,27 +178,15 @@ const Menu = ({
       </div>
 
       {/* MODALS */}
-      <BlackModal
-        open={historyOpen}
-        onClose={closeHistory}
-        closeModal={closeHistory}
-      >
+      <BlackModal open={historyOpen} onClose={closeHistory} closeModal={closeHistory}>
         <h1 className="text-center text-2xl font-bold">Chat History</h1>
       </BlackModal>
 
-      <BlackModal
-        open={wishlistOpen}
-        onClose={closeWishlist}
-        closeModal={closeWishlist}
-      >
+      <BlackModal open={wishlistOpen} onClose={closeWishlist} closeModal={closeWishlist}>
         <h3 className="text-center text-2xl font-bold">Wishlist</h3>
       </BlackModal>
 
-      <BlackModal
-        open={settingsOpen}
-        onClose={closeSettings}
-        closeModal={closeSettings}
-      >
+      <BlackModal open={settingsOpen} onClose={closeSettings} closeModal={closeSettings}>
         <h3 className="text-center text-2xl font-bold">Settings</h3>
       </BlackModal>
     </div>
