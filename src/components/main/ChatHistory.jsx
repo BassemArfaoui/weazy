@@ -119,8 +119,8 @@ function ChatHistory() {
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Search Bar */}
-        <div className="w-full px-4 md:px-6">
-          <div className="h-[50px] border-2 border-gray-500 flex items-center rounded-2xl">
+        <div className="w-full px-4  md:px-6">
+          <div className="h-[65px] border-2 border-gray-500 flex items-center rounded-2xl">
             <input
               type="text"
               placeholder="Search chats"
