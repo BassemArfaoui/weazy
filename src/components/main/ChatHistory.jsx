@@ -6,6 +6,7 @@ import { FaCheck } from "react-icons/fa";
 import Loading from "../tools/Loading";
 
 const API_URL = import.meta.env.VITE_BACKEND_API_URL;
+console.log(API_URL);
 const userId = "11111111-1111-1111-1111-111111111111";
 
 const fetchChats = async ({ pageParam = 1 }) => {
