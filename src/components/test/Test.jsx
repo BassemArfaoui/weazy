@@ -1,10 +1,11 @@
 import React from 'react'
 import PulseLoader from '../tools/PulseLoader'
+import ChatHistory from '../main/ChatHistory'
 
 function Test() {
   return (
     <div>
-      <PulseLoader />
+      <ChatHistory />
     </div>
   )
 }

@@ -7,6 +7,7 @@ import BlackModal from "../tools/BlackModal";
 import { FaRegHeart } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import TooltipWrapper from "../tools/TooltipWrapper";
+import ChatHistory from "../main/ChatHistory";
 
 const Menu = ({
   historyOpen,
@@ -179,7 +180,7 @@ const Menu = ({
 
       {/* MODALS */}
       <BlackModal open={historyOpen} onClose={closeHistory} closeModal={closeHistory}>
-        <h1 className="text-center text-2xl font-bold">Chat History</h1>
+        <ChatHistory />
       </BlackModal>
 
       <BlackModal open={wishlistOpen} onClose={closeWishlist} closeModal={closeWishlist}>

@@ -43,10 +43,10 @@ function ChatArea({ conversation, setConversation, isGenerating }) {
             >
               {msg.message && (
                 <div
-                  className={`max-w-[70%] rounded-2xl px-4 py-3 text-base ${
+                  className={`max-w-[90%] rounded-2xl px-4 py-3 text-base ${
                     msg.sender === 'user'
-                      ? 'bg-gray-700 text-gray-100 rounded-br-none'
-                      : 'bg-primary text-white rounded-bl-none'
+                      ? 'bg-msg text-gray-100 rounded-br-none'
+                      : 'bg-transparent text-white rounded-bl-none'
                   }`}
                 >
                   {msg.message}

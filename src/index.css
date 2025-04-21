@@ -13,6 +13,7 @@
   --color-secondary : #3a3b3d;
   --color-modal : #2f3032 ;
   --color-dark : #0d0d0d ;
+  --color-msg : var(--color-gray-700) ;
   
 }
 
