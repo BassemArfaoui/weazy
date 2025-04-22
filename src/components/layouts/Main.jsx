@@ -44,7 +44,7 @@ const Main = ({ children }) => {
 
       <div className="flex flex-1 overflow-hidden">
 
-        <div className="flex-1 overflow-y-auto px-2 pt-4 md:px-5 bg-primary text-white">
+        <div className="flex-1 overflow-y-auto px-3 pt-4  md:px-5 bg-primary text-white">
 
           {children}
         </div>

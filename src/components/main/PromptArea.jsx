@@ -135,7 +135,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
   }, [uploadedImages]);
 
   return (
-    <div className="bg-secondary w-full max-w-[800px] border-1 border-gray-500 rounded-3xl items-center justify-between text-inter text-xl text-gray-300 flex flex-col gap-1 mb-2 md:mb-3 pb-1 pt-2">
+    <div className="bg-secondary w-full max-w-[800px] border-1 border-gray-500 rounded-3xl items-center justify-between text-inter text-xl text-gray-300 flex flex-col gap-1 mb-2 md:mb-4 pb-1 pt-2">
 
       {/* Image Previews */}
       {uploadedImages.length > 0 && (
@@ -177,14 +177,14 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
         <div className="flex gap-3 items-center">
           <div className="inline-flex relative mr-2" ref={uploadMenuRef}>
             <button
-              className="p-2 rounded-full border border-gray-500 hover:bg-gray-500/40 cursor-pointer size-10"
+              className="p-2 rounded-full flex justify-center items-center border border-gray-500 hover:bg-gray-500/40 cursor-pointer size-10"
               onClick={toggleUploadMenu}
             >
               <HiOutlinePlus className="text-2xl" />
             </button>
 
             {isUploadMenuOpen && (
-              <div className="absolute z-10 min-w-60 rounded-xl bg-secondary shadow-lg border border-gray-500 bottom-full left-1/2 -translate-x-1/2 mb-3 px-1">
+              <div className="absolute z-10 min-w-60 rounded-xl bg-secondary shadow-lg border border-gray-500 bottom-full md:left-1/2 -left-2 md:-translate-x-1/2 mb-3 px-1">
                 <div className="divide-y divide-gray-500"                    
 >
                   <div
@@ -200,9 +200,26 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
                     disabled={isGeneratingInternal}
 
                   >
-                    <div className="text-center text-white font-bold hover:bg-gray-400/40 rounded-lg p-2 py-2.5 my-0.5">
-                      From Computer
+                    <div className="text-center text-white font-semibold hover:bg-gray-400/40 rounded-lg p-2 py-2 my-0.5">
+                      From Device
                     </div>
+                    
+                  </div>
+
+                  <div
+                    className={`p-1 cursor-pointer ${
+                      uploadedImages.length >= 3 ? "opacity-50 pointer-events-none" : ""
+                    }`}
+                    onClick={() => {
+                      
+                    }}
+                    disabled={true}
+
+                  >
+                    <div className="text-center text-white font-semibold hover:bg-gray-400/40 rounded-lg p-2 py-2 my-0.5">
+                      From Google Drive
+                    </div>
+                    
                   </div>
                 </div>
               </div>
