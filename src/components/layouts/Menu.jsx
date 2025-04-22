@@ -8,6 +8,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import TooltipWrapper from "../tools/TooltipWrapper";
 import ChatHistory from "../main/ChatHistory";
+import { FaBars } from "react-icons/fa6";
 
 const Menu = ({
   historyOpen,
@@ -36,13 +37,19 @@ const Menu = ({
 
   const [isModelsMenuOpen, setIsModelsMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const modelsMenuRef = useRef(null);
   const menuRef = useRef(null);
+  const mobileMenuRef = useRef(null);
 
   const toggleModelsMenu = () => setIsModelsMenuOpen((prev) => !prev);
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+  const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
+
   const closeModelsMenu = () => setIsModelsMenuOpen(false);
   const closeMenu = () => setIsMenuOpen(false);
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   const handleModelChange = (selectedModel) => {
     setModel(selectedModel);
@@ -50,7 +57,6 @@ const Menu = ({
     closeModelsMenu();
   };
 
-  // Optional: clean up invalid model from URL
   useEffect(() => {
     if (!models.includes(paramModel)) {
       setSearchParams({ model: models[0] });
@@ -77,9 +83,19 @@ const Menu = ({
     return () => document.removeEventListener("mousedown", handleClickOutsideMenu);
   }, []);
 
+  useEffect(() => {
+    const handleClickOutsideMobileMenu = (event) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+        closeMobileMenu();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutsideMobileMenu);
+    return () => document.removeEventListener("mousedown", handleClickOutsideMobileMenu);
+  }, []);
+
   return (
     <div>
-      <div className="px-2 md:px-8  h-15 text-white flex items-center justify-between py-8 bg-primary shadow-md pt-10">
+      <div className="px-3 md:px-8 h-15 text-white flex items-center justify-between py-8 bg-primary shadow-md pt-10">
         <div className="flex items-center cursor-pointer">
           <div ref={modelsMenuRef} className="relative">
             <button
@@ -117,29 +133,69 @@ const Menu = ({
         </div>
 
         <div className="flex md:gap-2 items-center">
-          <TooltipWrapper tooltip="New Chat" placement="bottom">
-            <span className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl">
-              <NewChat />
-            </span>
-          </TooltipWrapper>
+          <div className="md:flex hidden">
+            <TooltipWrapper tooltip="New Chat" placement="bottom">
+              <span className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl">
+                <NewChat />
+              </span>
+            </TooltipWrapper>
+            <TooltipWrapper tooltip="Chat History" placement="bottom">
+              <span
+                className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
+                onClick={openHistory}
+              >
+                <History />
+              </span>
+            </TooltipWrapper>
+            <TooltipWrapper tooltip="Wishlist" placement="bottom">
+              <span
+                className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
+                onClick={openWishlist}
+              >
+                <FaRegHeart className="w-[26px]" />
+              </span>
+            </TooltipWrapper>
+          </div>
 
-          <TooltipWrapper tooltip="Chat History" placement="bottom">
-            <span
-              className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
-              onClick={openHistory}
-            >
-              <History />
-            </span>
-          </TooltipWrapper>
+          <div className="flex flex-col md:hidden  relative" ref={mobileMenuRef}>
+            <TooltipWrapper tooltip="Options" placement="left">
+              <span
+                className="cursor-pointer flex hover:bg-gray-500/40 py-2 px-3 rounded-xl"
+                onClick={toggleMobileMenu}
+              >
+                <FaBars className="w-[22px] aspect-square" />
+              </span>
+            </TooltipWrapper>
 
-          <TooltipWrapper tooltip="Wishlist" placement="bottom">
-            <span
-              className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
-              onClick={openWishlist}
-            >
-              <FaRegHeart className="w-[26px]" />
-            </span>
-          </TooltipWrapper>
+            {isMobileMenuOpen && (
+              <div className="absolute z-10 rounded-xl bg-secondary shadow-lg border border-gray-500 top-full left-1/2 -translate-x-1/2  px-2 flex flex-col gap-1 py-2 ">
+              <TooltipWrapper tooltip="New Chat" placement="left">
+              <span className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl">
+                <NewChat />
+              </span>
+            </TooltipWrapper>
+            <TooltipWrapper tooltip="Chat History" placement="left">
+              <span
+                className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
+                onClick={openHistory}
+              >
+                <History />
+              </span>
+            </TooltipWrapper>
+            <TooltipWrapper tooltip="Wishlist" placement="left">
+              <span
+                className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
+                onClick={openWishlist}
+              >
+                <FaRegHeart className="w-[26px]" />
+              </span>
+            </TooltipWrapper>
+
+      
+         
+              </div>
+            )}
+          </div>
 
           <div ref={menuRef} className="relative ml-2 md:ml-5 cursor-pointer size-10">
             <div className="rounded-full bg-gray-300 border-2 border-gray-100 w-full h-full overflow-hidden">

@@ -43,29 +43,29 @@ function ChatArea({ conversation, setConversation, isGenerating }) {
             >
               {msg.message && (
                 <div
-                  className={`max-w-[90%] rounded-2xl px-4 py-3 text-base ${
+                  className={`max-w-[90%] rounded-2xl py-3 text-base ${
                     msg.sender === 'user'
-                      ? 'bg-msg text-gray-100 rounded-br-none'
+                      ? 'bg-msg text-gray-100 rounded-br-none px-4 '
                       : 'bg-transparent text-white rounded-bl-none'
                   }`}
                 >
                   {msg.message}
                 </div>
               )}
-
               {msg.image_urls && msg.image_urls.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {msg.image_urls.map((url, index) => (
-                    <img
-                      key={index}
-                      src={url}
-                      alt={`preview-${index}`}
-                      onClick={() => openPhotoModal(url)}
-                      className="w-28 h-28 object-cover rounded-lg border border-white/10 cursor-pointer hover:brightness-110 transition duration-150"
-                    />
-                  ))}
-                </div>
-              )}
+  <div className={`flex flex-wrap gap-2 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+    {msg.image_urls.map((url, index) => (
+      <img
+        key={index}
+        src={url}
+        alt={`preview-${index}`}
+        onClick={() => openPhotoModal(url)}
+        className="w-28 h-28 object-cover rounded-lg border border-white/10 cursor-pointer hover:brightness-110 transition duration-150"
+      />
+    ))}
+  </div>
+)}
+
               {index === conversation.length - 1 && (
                 <div ref={lastMessageRef} />  
               )}

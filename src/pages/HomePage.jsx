@@ -34,6 +34,11 @@ function HomePage() {
       id: 4,
       sender: 'bot',
       message: 'Got it! Filtering for white sneakers now.',
+      image_urls: [
+        'https://picsum.photos/seed/user1/150',
+        'https://picsum.photos/seed/user5/151',
+        'https://picsum.photos/seed/user3/152',
+      ],
     },
     {
       id: 6,
