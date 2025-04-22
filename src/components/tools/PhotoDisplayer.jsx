@@ -38,7 +38,7 @@ const PhotoDisplayer = ({ open, onClose, imageSrc }) => {
       >
         {/* Close Button */}
         <span
-          className="absolute top-5 right-10 cursor-pointer p-2 aspect-square rounded-full text-3xl text-gray-700 bg-gray-200"
+          className="absolute top-5 right-5 cursor-pointer p-2 aspect-square rounded-full text-3xl text-gray-700 bg-gray-200"
           onClick={(e) => {
             e.stopPropagation();
             onClose();
