@@ -26,7 +26,7 @@ function ChatArea({ conversation, setConversation, isGenerating }) {
   }, [conversation]);  
 
   return (
-    <div className="w-full h-full overflow-y-auto px-4 py-6 pb-20">
+    <div className="w-full h-full overflow-y-auto px-4 py-6 pb-8">
       <div className="max-w-[920px] mx-auto text-inter text-gray-200 flex flex-col justify-start gap-4">
         {conversation.length === 0 ? (
           <>
