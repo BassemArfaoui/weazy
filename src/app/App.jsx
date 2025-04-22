@@ -21,7 +21,7 @@ function App() {
       <div className="text-3xl font-bold *:font-inter">
         <Router>
           <Main>
-            <Suspense fallback={<div className="w-full h-[80%] flex items-center justify-center"><Loading size={0.75}/></div>}>
+            <Suspense fallback={<div className="w-full h-[80%] flex items-center justify-center"><Loading size={0.7}/></div>}>
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/test" element={<Test />} />
