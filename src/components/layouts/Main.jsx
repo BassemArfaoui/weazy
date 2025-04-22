@@ -39,7 +39,7 @@ const Main = ({ children }) => {
   }
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-[100svh]">
       <Menu  historyOpen={isHistoryOpen}  wishlistOpen={isWishlistOpen} settingsOpen={isSettingsOpen} openSettings={openSettings} closeSettings={closeSettings} openWishlist={openWishlist} closeWishlist={closeWishlist}  openHistory={openHistory} closeHistory={closeHistory} />
 
       <div className="flex flex-1 overflow-hidden">
