@@ -119,7 +119,7 @@ function ChatHistory() {
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Search Bar */}
-        <div className="w-full px-4  md:px-6">
+        <div className="w-full   md:px-6">
           <div className="h-[55px] border-2 border-gray-500 flex items-center rounded-2xl">
             <input
               type="text"
@@ -130,7 +130,7 @@ function ChatHistory() {
         </div>
 
         {/* Chat List */}
-        <div className="flex-1 flex px-4 md:px-8 pt-5 overflow-hidden">
+        <div className="flex-1 flex px-1 md:px-8 pt-5 overflow-hidden">
           <div className="w-full h-full max-h-[calc(100vh-200px)] overflow-y-auto space-y-1.5 px-2">
             {isLoading && (
               <div className="flex justify-center w-full h-full items-center"><Loading size={0.8} /></div>

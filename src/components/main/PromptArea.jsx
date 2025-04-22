@@ -3,6 +3,9 @@ import { HiArrowSmUp, HiOutlinePlus } from "react-icons/hi";
 import { IoMdClose } from "react-icons/io";
 import TooltipWrapper from "../tools/TooltipWrapper";
 import PhotoDisplayer from "../tools/PhotoDisplayer";
+import { FaSearch } from "react-icons/fa";
+import { FaLightbulb } from "react-icons/fa";
+
 
 function PromptArea({ conversation, setConversation, setIsGenerating }) {
   const [isUploadMenuOpen, setIsUploadMenuOpen] = useState(false);
@@ -181,7 +184,8 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
 
             {isUploadMenuOpen && (
               <div className="absolute z-10 min-w-60 rounded-xl bg-secondary shadow-lg border border-gray-500 bottom-full left-1/2 -translate-x-1/2 mb-3 px-1">
-                <div className="divide-y divide-gray-500">
+                <div className="divide-y divide-gray-500"                    
+>
                   <div
                     className={`p-1 cursor-pointer ${
                       uploadedImages.length >= 3 ? "opacity-50 pointer-events-none" : ""
@@ -192,6 +196,8 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
                         closeUploadMenu();
                       }
                     }}
+                    disabled={isGeneratingInternal}
+
                   >
                     <div className="text-center text-white font-bold hover:bg-gray-400/40 rounded-lg p-2 py-2.5 my-0.5">
                       From Computer
@@ -213,7 +219,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
           />
 
           <button
-            className={`border-1 px-3 py-1 rounded-3xl border-gray-500 font-medium cursor-pointer ${
+            className={`border-1 md:px-3 justify-center  flex items-center gap-1 md:py-1  p-2 aspect-square md:aspect-auto size-10 md:h-10 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
               option === "search"
                 ? "bg-gray-200 text-secondary"
                 : "hover:bg-gray-500/40"
@@ -221,11 +227,11 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
             onClick={toggleSearchOption}
             disabled={isGeneratingInternal}
           >
-            Search
+           <FaSearch className="inline-block mr-0" /> <span className="p-0 m-0 hidden md:inline-flex">Search  </span>
           </button>
 
           <button
-            className={`border-1 px-3 py-1 rounded-3xl border-gray-500 font-medium cursor-pointer ${
+            className={`border-1 md:px-3 md:h-10 justify-center flex items-center h-10 gap-1 md:py-1  p-2 aspect-square md:aspect-auto size-10 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
               option === "recommend"
                 ? "bg-gray-200 text-secondary"
                 : "hover:bg-gray-500/40"
@@ -233,7 +239,8 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
             onClick={toggleRecommendOption}
             disabled={isGeneratingInternal}
           >
-            Recommend
+          <FaLightbulb className="inline-block text-xl mr-0" /> <span className="p-0 m-0 hidden md:inline-flex">Recommend  </span>
+
           </button>
         </div>
 

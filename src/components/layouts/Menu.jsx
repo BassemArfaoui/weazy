@@ -79,7 +79,7 @@ const Menu = ({
 
   return (
     <div>
-      <div className="p-8 h-15 text-white flex items-center justify-between py-8 bg-primary shadow-md pt-10">
+      <div className=" px-4 md:px-8  h-15 text-white flex items-center justify-between py-8 bg-primary shadow-md pt-10">
         <div className="flex items-center cursor-pointer">
           <div ref={modelsMenuRef} className="relative">
             <button
@@ -116,7 +116,7 @@ const Menu = ({
           </div>
         </div>
 
-        <div className="mr-3 flex gap-2 items-center">
+        <div className="flex md:gap-2 items-center">
           <TooltipWrapper tooltip="New Chat" placement="bottom">
             <span className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl">
               <NewChat />
@@ -141,7 +141,7 @@ const Menu = ({
             </span>
           </TooltipWrapper>
 
-          <div ref={menuRef} className="relative ml-5 cursor-pointer size-10">
+          <div ref={menuRef} className="relative ml-2 md:ml-5 cursor-pointer size-10">
             <div className="rounded-full bg-gray-300 border-2 border-gray-100 w-full h-full overflow-hidden">
               <img
                 src={profile}
