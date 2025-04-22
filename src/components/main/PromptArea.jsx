@@ -184,7 +184,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
             </button>
 
             {isUploadMenuOpen && (
-              <div className="absolute z-10 min-w-60 rounded-xl bg-secondary shadow-lg border border-gray-500 bottom-full md:left-1/2 -left-2 md:-translate-x-1/2 mb-3 px-1">
+              <div className="absolute z-10 min-w-60 rounded-xl bg-secondary shadow-lg border border-gray-500 bottom-full md:left-1/2 -left-5 md:-translate-x-1/2 mb-3 px-1">
                 <div className="divide-y divide-gray-500"                    
 >
                   <div
