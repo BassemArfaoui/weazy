@@ -79,7 +79,7 @@ const Menu = ({
 
   return (
     <div>
-      <div className=" px-4 md:px-8  h-15 text-white flex items-center justify-between py-8 bg-primary shadow-md pt-10">
+      <div className="px-2 md:px-8  h-15 text-white flex items-center justify-between py-8 bg-primary shadow-md pt-10">
         <div className="flex items-center cursor-pointer">
           <div ref={modelsMenuRef} className="relative">
             <button

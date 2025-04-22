@@ -135,7 +135,8 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
   }, [uploadedImages]);
 
   return (
-    <div className="bg-secondary w-full max-w-[800px] border-1 border-gray-500 rounded-3xl items-center justify-between text-inter text-xl text-gray-300 flex flex-col gap-1 mb-10 pb-1 pt-2">
+    <div className="bg-secondary w-full max-w-[800px] border-1 border-gray-500 rounded-3xl items-center justify-between text-inter text-xl text-gray-300 flex flex-col gap-1 mb-2 md:mb-5 pb-1 pt-2">
+
       {/* Image Previews */}
       {uploadedImages.length > 0 && (
         <div className="flex gap-4 flex-wrap justify-start px-7 pb-3 w-full">
