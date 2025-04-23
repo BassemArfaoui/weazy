@@ -7,7 +7,7 @@ import BlackModal from "../tools/BlackModal";
 import { FaRegHeart } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import TooltipWrapper from "../tools/TooltipWrapper";
-import ChatHistory from "../main/ChatHistory";
+import ChatHistory from "../menu/ChatHistory";
 import { FaBars } from "react-icons/fa6";
 
 const Menu = ({

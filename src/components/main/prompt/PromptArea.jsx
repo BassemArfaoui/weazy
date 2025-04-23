@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { HiArrowSmUp, HiOutlinePlus } from "react-icons/hi";
 import { IoMdClose } from "react-icons/io";
-import TooltipWrapper from "../tools/TooltipWrapper";
-import PhotoDisplayer from "../tools/PhotoDisplayer";
+import TooltipWrapper from "../../tools/TooltipWrapper";
+import PhotoDisplayer from "../../tools/PhotoDisplayer";
 import { FaSearch } from "react-icons/fa";
 import { FaLightbulb } from "react-icons/fa";
+import ImagesPreview from "./ImagesPreview";
+import TextArea from "./TextArea";
 
 
 function PromptArea({ conversation, setConversation, setIsGenerating }) {
@@ -139,38 +141,11 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
 
       {/* Image Previews */}
       {uploadedImages.length > 0 && (
-        <div className="flex gap-4 flex-wrap justify-start px-7 pb-3 w-full">
-          {uploadedImages.map((src, index) => (
-            <div key={index} className="relative size-17 rounded-lg border border-gray-500">
-              <img
-                src={src}
-                alt={`upload-${index}`}
-                className="object-cover w-full rounded-lg h-full cursor-pointer"
-                onClick={() => openPhotoModal(src)}
-              />
-              <button
-                className="absolute z-100 -top-2 -right-2 bg-black bg-opacity-60 text-white rounded-full p-1 hover:bg-opacity-80 cursor-pointer"
-                onClick={() => removeImage(index)}
-              >
-                <IoMdClose className="text-sm" />
-              </button>
-            </div>
-          ))}
-        </div>
+        <ImagesPreview uploadedImages={uploadedImages} removeImage={removeImage} openPhotoModal={openPhotoModal} />
       )}
 
       {/* Textarea */}
-      <div className="px-8 w-full">
-        <textarea
-          placeholder="Speak anything in your mind"
-          style={{ resize: "none" }}
-          className="bg-transparent pt-3 w-full border-none outline-none text-gray-300 text-lg"
-          value={promptText}
-          onChange={(e) => setPromptText(e.target.value)}
-          onKeyDown={handleKeyDown}
-          disabled={isGeneratingInternal}
-        />
-      </div>
+        <TextArea promptText={promptText} setPromptText={setPromptText} handleKeyDown={handleKeyDown} isGeneratingInternal={isGeneratingInternal} />
 
       {/* Controls */}
       <div className="w-full flex items-center justify-between px-6 py-3 gap-3">

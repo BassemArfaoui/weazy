@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { HiOutlinePlus } from "react-icons/hi";
 import { HiArrowSmUp } from "react-icons/hi";
-import PromptArea from '../components/main/PromptArea';
-import ChatArea from '../components/main/ChatArea';
+import PromptArea from '../components/main/prompt/PromptArea';
+import ChatArea from '../components/main/chat/ChatArea';
 
 function HomePage() {
   const [isGenerating, setIsGenerating] = useState(false);
@@ -56,7 +56,7 @@ function HomePage() {
   ]);
 
   return (
-    <div className="h-full w-full px-0 flex-col flex justify-between items-center gap-1">
+    <div className="h-full w-full px-0 flex-col flex justify-between items-center gap-2 md:gap-1">
 
        <ChatArea conversation={conversation} setConversation={setConversation} isGenerating={isGenerating}/>
 
