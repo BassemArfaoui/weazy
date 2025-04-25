@@ -33,13 +33,27 @@ function HomePage() {
     }
   }, [data]);
 
-  if (isPending) return <div className="h-[80%] w-full px-0 flex justify-center items-center"><Loading size={0.7}/></div>;
+  
   if (isError) return <div className="h-full w-full px-0 flex justify-between items-center text-red-500">Error: {error.message}</div>;
 
   return (
     <div className="h-full w-full px-0 flex-col flex justify-between items-center gap-2 md:gap-1">
-      <ChatArea conversation={conversation} setConversation={setConversation} isGenerating={isGenerating} />
-      <PromptArea conversation={conversation} setConversation={setConversation} setIsGenerating={setIsGenerating} />
+      {isPending ? (
+        <div className="h-[80%] w-full px-0 flex justify-center items-center">
+          <Loading size={0.7} />
+        </div>
+      ) : (
+        <ChatArea
+          conversation={conversation}
+          setConversation={setConversation}
+          isGenerating={isGenerating}
+        />
+      )}
+      <PromptArea
+        conversation={conversation}
+        setConversation={setConversation}
+        setIsGenerating={setIsGenerating}
+      />
     </div>
   );
 }
