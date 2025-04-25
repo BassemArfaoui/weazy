@@ -1,19 +1,25 @@
-import React, { useState } from 'react'
-import { HiOutlinePlus } from "react-icons/hi";
-import { HiArrowSmUp } from "react-icons/hi";
+import React, { use, useEffect, useState } from 'react'
 import PromptArea from '../components/main/prompt/PromptArea';
-import ChatArea from '../components/main/chat/ChatArea';
 import Welcome from '../components/main/chat/Welcome';
+import { useConversation } from "../Contexts/ConversationContext"
+import { useLocation } from 'react-router-dom';
+
+
 
 function HomePage() {
-  const [isGenerating, setIsGenerating] = useState(false);
+  const { conversation, setConversation, isGenerating, setIsGenerating } = useConversation();
+  const location = useLocation()
 
-  const [conversation, setConversation] = useState([]);
+  useEffect(()=> setConversation([]), [])
 
   return (
     <div className="h-full w-full px-0 flex-col flex justify-center items-center gap-2 md:gap-1">
-       <Welcome />
-       <PromptArea conversation={conversation} setConversation={setConversation} setIsGenerating={setIsGenerating}/>
+      {location.pathname === "/"  &&  <Welcome />}
+      <PromptArea
+        conversation={conversation}
+        setConversation={setConversation}
+        setIsGenerating={setIsGenerating}
+      />
     </div>
   );
 }

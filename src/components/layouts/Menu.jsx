@@ -1,6 +1,6 @@
 import { IoIosArrowDown } from "react-icons/io";
 import profile from "../../assets/images/profile.png";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import NewChat from "../../assets/svg/NewChat";
 import History from "../../assets/svg/History";
 import BlackModal from "../tools/BlackModal";
@@ -9,6 +9,9 @@ import { useEffect, useRef, useState } from "react";
 import TooltipWrapper from "../tools/TooltipWrapper";
 import ChatHistory from "../menu/ChatHistory";
 import { FaBars } from "react-icons/fa6";
+
+import { useConversation } from "../../Contexts/ConversationContext"
+
 
 const Menu = ({
   historyOpen,
@@ -21,6 +24,9 @@ const Menu = ({
   settingsOpen,
   openSettings,
 }) => {
+
+  const { setConversation } = useConversation();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const paramModel = searchParams.get("model");
 
@@ -32,6 +38,7 @@ const Menu = ({
   ]);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [model, setModel] = useState(
     paramModel && models.includes(paramModel) ? paramModel : models[0]
@@ -54,11 +61,13 @@ const Menu = ({
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   const openNewChat = () => {
-    navigate("/");
+    if(location.pathname !== "/")
+    {
+      navigate("/");
+    }
     if(isMobileMenuOpen)
     {closeMobileMenu();}
   }
-
 
 
   const handleModelChange = (selectedModel) => {

@@ -7,15 +7,23 @@ import { FaSearch } from "react-icons/fa";
 import { FaLightbulb } from "react-icons/fa";
 import ImagesPreview from "./ImagesPreview";
 import TextArea from "./TextArea";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Loading from "../../tools/Loading";
 
 
 function PromptArea({ conversation, setConversation, setIsGenerating }) {
+
+  const userId = "11111111-1111-1111-1111-111111111111";
+  const navigate = useNavigate()
+
   const [isUploadMenuOpen, setIsUploadMenuOpen] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [option, setOption] = useState("search");
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [promptText, setPromptText] = useState("");
+  const [isCreating , setIisCreating] = useState(false);
   const [isGeneratingInternal, setIsGeneratingInternal] = useState(false);
   const generationTimeoutRef = useRef(null);
 
@@ -77,15 +85,32 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
     setSelectedImage(null);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
     if (!promptText.trim() && uploadedImages.length === 0) return;
 
     const newMessage = {
-      id: conversation.length + 1,
       sender: "user",
       message: promptText.trim(),
       image_urls: uploadedImages,
     };
+
+    if(conversation.length === 0) {
+      await createChat(newMessage.message , newMessage.image_urls);
+      generationTimeoutRef.current = setTimeout(() => {
+        setConversation(prev => [
+          ...prev,
+          {
+            id: prev.length + 1,
+            sender: "bot",
+            message: "Here’s your awesome result",
+          },
+        ]);
+        setIsGenerating(false);
+        setIsGeneratingInternal(false);
+      }, 5000);
+    }
+    else
+    {
 
     setConversation(prev => [...prev, newMessage]);
     setPromptText("");
@@ -104,7 +129,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
       ]);
       setIsGenerating(false);
       setIsGeneratingInternal(false);
-    }, 10000);
+    }, 10000);}
   };
 
   const cancelGeneration = () => {
@@ -119,6 +144,24 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
       if (!isGeneratingInternal) handleSubmit();
     }
   };
+
+  const createChat = async (message , image_urls) => {
+    try {
+      setIisCreating(true);
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/create-chat`, {
+        user_id : userId,
+        message ,
+        image_urls
+      });
+      setIsGenerating(true)
+      navigate(`/chat/${res.data.data.id}`)
+      setIisCreating(false);
+      
+    } catch (error) {
+      alert("Error creating chat:", error);
+    }
+  };
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -145,7 +188,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
       )}
 
       {/* Textarea */}
-        <TextArea promptText={promptText} setPromptText={setPromptText} handleKeyDown={handleKeyDown} isGeneratingInternal={isGeneratingInternal} />
+        <TextArea promptText={promptText} setPromptText={setPromptText} handleKeyDown={handleKeyDown}  disabled={isGeneratingInternal || isCreating}/>
 
       {/* Controls */}
       <div className="w-full flex items-center justify-between px-6 py-3 gap-3">
@@ -208,7 +251,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
             multiple
             onChange={handleFileUpload}
             className="hidden"
-            disabled={uploadedImages.length >= 3 || isGeneratingInternal}
+            disabled={uploadedImages.length >= 3 || isGeneratingInternal || isCreating}
           />
 
           <button
@@ -240,7 +283,14 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
         {/* Submit / Cancel */}
         <div className="flex items-center">
           <TooltipWrapper tooltip={isGeneratingInternal ? "Cancel" : "Submit"} placement="right">
-            {isGeneratingInternal ? (
+            {isCreating ?            
+            <button
+                disabled={true}
+                className="border-1 p-1 border-gray-500 bg-white text-gray-950 rounded-full size-10 flex justify-center items-center cursor-pointer"
+              >
+                <Loading  className="text-2xl" submit />
+              </button> :
+             isGeneratingInternal ? (
               <button
                 onClick={cancelGeneration}
                 className="border-1 p-1 border-gray-500 bg-white text-gray-950 rounded-full size-10 flex justify-center items-center cursor-pointer"

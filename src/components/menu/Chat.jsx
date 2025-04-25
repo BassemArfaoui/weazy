@@ -36,7 +36,7 @@ function Chat({
   return (
     <div
       ref={isLast ? lastChatRef : null}
-      className={`px-4 py-3 bg-primary/87 text-white border-2 rounded-2xl hover:bg-gray-500/30 transition-colors cursor-pointer flex gap-3 ${
+      className={`px-4  bg-primary/87 text-white border-2 rounded-2xl hover:bg-gray-500/30 transition-colors cursor-pointer flex gap-0 ${
         editingId === chat.id ? "border-gray-200" : "border-transparent"
       }`}
     >
@@ -52,12 +52,12 @@ function Chat({
             autoFocus
           />
         ) : (
-          <span className="truncate overflow-hidden whitespace-nowrap font-semibold capitalize" onClick={openChat}>
+          <span className="truncate overflow-hidden whitespace-nowrap font-semibold capitalize py-4" onClick={openChat}>
             {chatEdits[chat.id] || chat.title}
           </span>
         )}
       </div>
-      <span className="flex items-center gap-2 shrink-0">
+      <span className="flex items-center gap-2 shrink-0 py-4">
         {editingId !== chat.id ? (
           <span
             className="p-2 hover:bg-blue-500 rounded-xl aspect-square"

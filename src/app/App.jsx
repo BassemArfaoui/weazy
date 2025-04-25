@@ -8,7 +8,7 @@ import Test from "../components/test/Test";
 import "./App.css";
 import PageLoader from "../components/tools/PageLoader";
 import Loading from "../components/tools/Loading";
-
+import { ConversationProvider } from "../Contexts/ConversationContext"
 const queryClient = new QueryClient();
 
 // Lazy-loaded pages
@@ -19,19 +19,21 @@ const ChatPage = lazy(() => import("../pages/ChatPage"));
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="text-3xl font-bold *:font-inter">
-        <Router>
-          <Main>
-            <Suspense fallback={<div className="w-full h-[80%] flex items-center justify-center"><Loading size={0.7}/></div>}>
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/chat/:chatId" element={<ChatPage/>} />
-                <Route path="/test" element={<Test />} />
-              </Routes>
-            </Suspense>
-          </Main>
-        </Router>
-      </div>
+      <ConversationProvider>
+        <div className="text-3xl font-bold *:font-inter">
+          <Router>
+            <Main>
+              <Suspense fallback={<div className="w-full h-[80%] flex items-center justify-center"><Loading size={0.7}/></div>}>
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/chat/:chatId" element={<ChatPage />} />
+                  <Route path="/test" element={<Test />} />
+                </Routes>
+              </Suspense>
+            </Main>
+          </Router>
+        </div>
+      </ConversationProvider>
 
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

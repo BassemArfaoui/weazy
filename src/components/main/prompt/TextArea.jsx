@@ -1,6 +1,6 @@
 import React from 'react'
 
-function TextArea({promptText, setPromptText, handleKeyDown, isGeneratingInternal}) {
+function TextArea({promptText, setPromptText, handleKeyDown, disabled}) {
   return (
     <div className="px-8 w-full">
     <textarea
@@ -10,7 +10,7 @@ function TextArea({promptText, setPromptText, handleKeyDown, isGeneratingInterna
       value={promptText}
       onChange={(e) => setPromptText(e.target.value)}
       onKeyDown={handleKeyDown}
-      disabled={isGeneratingInternal}
+      disabled={disabled}
       autoFocus
     />
   </div>
