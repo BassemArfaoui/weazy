@@ -236,7 +236,7 @@ const Menu = ({
 
       {/* MODALS */}
       <BlackModal open={historyOpen} onClose={closeHistory} closeModal={closeHistory}>
-        <ChatHistory />
+        <ChatHistory closeHistory={closeHistory}/>
       </BlackModal>
 
       <BlackModal open={wishlistOpen} onClose={closeWishlist} closeModal={closeWishlist}>

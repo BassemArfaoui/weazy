@@ -2,6 +2,8 @@ import React from "react";
 import { FaPen } from "react-icons/fa";
 import { FaTrashCan } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 
 function Chat({
   chat,
@@ -15,11 +17,20 @@ function Chat({
   pageIndex,
   chatIndex,
   lastChatRef,
+  closeHistory,
 }) {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleSaveEdit(chat.id);
     }
+  };
+
+  const navigate = useNavigate()
+
+
+  const openChat = () => {
+    closeHistory();
+    navigate(`/chat/${chat.id}`);
   };
 
   return (
@@ -41,7 +52,7 @@ function Chat({
             autoFocus
           />
         ) : (
-          <span className="truncate overflow-hidden whitespace-nowrap font-semibold capitalize">
+          <span className="truncate overflow-hidden whitespace-nowrap font-semibold capitalize" onClick={openChat}>
             {chatEdits[chat.id] || chat.title}
           </span>
         )}

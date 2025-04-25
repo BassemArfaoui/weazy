@@ -57,9 +57,7 @@ function HomePage() {
 
   return (
     <div className="h-full w-full px-0 flex-col flex justify-between items-center gap-2 md:gap-1">
-
        <ChatArea conversation={conversation} setConversation={setConversation} isGenerating={isGenerating}/>
-
        <PromptArea conversation={conversation} setConversation={setConversation} setIsGenerating={setIsGenerating}/>
     </div>
   );

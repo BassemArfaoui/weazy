@@ -13,6 +13,7 @@ const queryClient = new QueryClient();
 
 // Lazy-loaded pages
 const HomePage = lazy(() => import("../pages/HomePage"));
+const ChatPage = lazy(() => import("../pages/ChatPage"));
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
             <Suspense fallback={<div className="w-full h-[80%] flex items-center justify-center"><Loading size={0.7}/></div>}>
               <Routes>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/chat/:chatId" element={<ChatPage/>} />
                 <Route path="/test" element={<Test />} />
               </Routes>
             </Suspense>

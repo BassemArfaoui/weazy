@@ -24,7 +24,7 @@ const deleteChat = async (id) => {
   return response.data;
 };
 
-function ChatHistory({ isOpen }) {
+function ChatHistory({ isOpen , closeHistory }) {
   const [editingId, setEditingId] = useState(null);
   const [chatEdits, setChatEdits] = useState({});
   const queryClient = useQueryClient();
@@ -168,6 +168,7 @@ function ChatHistory({ isOpen }) {
       pageIndex={pageIndex}
       chatIndex={chatIndex}
       lastChatRef={lastChatRef}
+      closeHistory={closeHistory}
     />
   );
 
