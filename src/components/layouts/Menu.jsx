@@ -1,6 +1,6 @@
 import { IoIosArrowDown } from "react-icons/io";
 import profile from "../../assets/images/profile.png";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import NewChat from "../../assets/svg/NewChat";
 import History from "../../assets/svg/History";
 import BlackModal from "../tools/BlackModal";
@@ -31,6 +31,8 @@ const Menu = ({
     "Dataset 4",
   ]);
 
+  const navigate = useNavigate();
+
   const [model, setModel] = useState(
     paramModel && models.includes(paramModel) ? paramModel : models[0]
   );
@@ -50,6 +52,14 @@ const Menu = ({
   const closeModelsMenu = () => setIsModelsMenuOpen(false);
   const closeMenu = () => setIsMenuOpen(false);
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
+  const openNewChat = () => {
+    navigate("/");
+    if(isMobileMenuOpen)
+    {closeMobileMenu();}
+  }
+
+
 
   const handleModelChange = (selectedModel) => {
     setModel(selectedModel);
@@ -135,7 +145,7 @@ const Menu = ({
         <div className="flex md:gap-2 items-center">
           <div className="md:flex hidden">
             <TooltipWrapper tooltip="New Chat" placement="bottom">
-              <span className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl">
+              <span className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl" onClick={openNewChat}>
                 <NewChat />
               </span>
             </TooltipWrapper>
@@ -170,7 +180,7 @@ const Menu = ({
             {isMobileMenuOpen && (
               <div className="absolute z-10 rounded-xl bg-secondary shadow-lg border border-gray-500 top-full left-1/2 -translate-x-1/2  px-2 flex flex-col gap-1 py-2 ">
               <TooltipWrapper tooltip="New Chat" placement="left">
-              <span className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl">
+              <span className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl" onClick={openNewChat}>
                 <NewChat />
               </span>
             </TooltipWrapper>

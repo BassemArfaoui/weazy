@@ -5,7 +5,7 @@ const TooltipWrapper = ({
   children,
   tooltip,
   placement = 'top',
-  enterDelay = 500, 
+  enterDelay = 1500, 
   leaveDelay = 200,  
 }) => {
   return (
