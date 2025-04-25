@@ -11,6 +11,7 @@ function TextArea({promptText, setPromptText, handleKeyDown, isGeneratingInterna
       onChange={(e) => setPromptText(e.target.value)}
       onKeyDown={handleKeyDown}
       disabled={isGeneratingInternal}
+      autoFocus
     />
   </div>
   )
