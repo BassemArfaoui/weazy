@@ -10,8 +10,7 @@ import TooltipWrapper from "../tools/TooltipWrapper";
 import ChatHistory from "../menu/ChatHistory";
 import { FaBars } from "react-icons/fa6";
 
-import { useConversation } from "../../Contexts/ConversationContext"
-
+import { useConversation } from "../../Contexts/ConversationContext";
 
 const Menu = ({
   historyOpen,
@@ -24,7 +23,6 @@ const Menu = ({
   settingsOpen,
   openSettings,
 }) => {
-
   const { setConversation } = useConversation();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -61,14 +59,13 @@ const Menu = ({
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   const openNewChat = () => {
-    if(location.pathname !== "/")
-    {
+    if (location.pathname !== "/") {
       navigate("/");
     }
-    if(isMobileMenuOpen)
-    {closeMobileMenu();}
-  }
-
+    if (isMobileMenuOpen) {
+      closeMobileMenu();
+    }
+  };
 
   const handleModelChange = (selectedModel) => {
     setModel(selectedModel);
@@ -84,7 +81,10 @@ const Menu = ({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (modelsMenuRef.current && !modelsMenuRef.current.contains(event.target)) {
+      if (
+        modelsMenuRef.current &&
+        !modelsMenuRef.current.contains(event.target)
+      ) {
         closeModelsMenu();
       }
     };
@@ -99,17 +99,22 @@ const Menu = ({
       }
     };
     document.addEventListener("mousedown", handleClickOutsideMenu);
-    return () => document.removeEventListener("mousedown", handleClickOutsideMenu);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutsideMenu);
   }, []);
 
   useEffect(() => {
     const handleClickOutsideMobileMenu = (event) => {
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target)
+      ) {
         closeMobileMenu();
       }
     };
     document.addEventListener("mousedown", handleClickOutsideMobileMenu);
-    return () => document.removeEventListener("mousedown", handleClickOutsideMobileMenu);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutsideMobileMenu);
   }, []);
 
   return (
@@ -152,9 +157,12 @@ const Menu = ({
         </div>
 
         <div className="flex md:gap-2 items-center">
-          <div className="md:flex hidden">
+          <div className="md:flex hidden items-center">
             <TooltipWrapper tooltip="New Chat" placement="bottom">
-              <span className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl" onClick={openNewChat}>
+              <span
+                className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
+                onClick={openNewChat}
+              >
                 <NewChat />
               </span>
             </TooltipWrapper>
@@ -176,7 +184,10 @@ const Menu = ({
             </TooltipWrapper>
           </div>
 
-          <div className="flex flex-col md:hidden  relative" ref={mobileMenuRef}>
+          <div
+            className="flex flex-col md:hidden  relative"
+            ref={mobileMenuRef}
+          >
             <TooltipWrapper tooltip="Options" placement="left">
               <span
                 className="cursor-pointer flex hover:bg-gray-500/40 py-2 px-3 rounded-xl"
@@ -188,35 +199,38 @@ const Menu = ({
 
             {isMobileMenuOpen && (
               <div className="absolute z-10 rounded-xl bg-secondary shadow-lg border border-gray-500 top-full left-1/2 -translate-x-1/2  px-2 flex flex-col gap-1 py-2 ">
-              <TooltipWrapper tooltip="New Chat" placement="left">
-              <span className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl" onClick={openNewChat}>
-                <NewChat />
-              </span>
-            </TooltipWrapper>
-            <TooltipWrapper tooltip="Chat History" placement="left">
-              <span
-                className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
-                onClick={openHistory}
-              >
-                <History />
-              </span>
-            </TooltipWrapper>
-            <TooltipWrapper tooltip="Wishlist" placement="left">
-              <span
-                className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
-                onClick={openWishlist}
-              >
-                <FaRegHeart className="w-[26px]" />
-              </span>
-            </TooltipWrapper>
-
-      
-         
+                <TooltipWrapper tooltip="New Chat" placement="left">
+                  <span
+                    className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
+                    onClick={openNewChat}
+                  >
+                    <NewChat />
+                  </span>
+                </TooltipWrapper>
+                <TooltipWrapper tooltip="Chat History" placement="left">
+                  <span
+                    className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
+                    onClick={openHistory}
+                  >
+                    <History />
+                  </span>
+                </TooltipWrapper>
+                <TooltipWrapper tooltip="Wishlist" placement="left">
+                  <span
+                    className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
+                    onClick={openWishlist}
+                  >
+                    <FaRegHeart className="w-[26px]" />
+                  </span>
+                </TooltipWrapper>
               </div>
             )}
           </div>
 
-          <div ref={menuRef} className="relative ml-2 md:ml-5 cursor-pointer size-10">
+          <div
+            ref={menuRef}
+            className="relative ml-2 md:ml-5 cursor-pointer size-10"
+          >
             <div className="rounded-full bg-gray-300 border-2 border-gray-100 w-full h-full overflow-hidden">
               <img
                 src={profile}
@@ -254,15 +268,27 @@ const Menu = ({
       </div>
 
       {/* MODALS */}
-      <BlackModal open={historyOpen} onClose={closeHistory} closeModal={closeHistory}>
-        <ChatHistory closeHistory={closeHistory}/>
+      <BlackModal
+        open={historyOpen}
+        onClose={closeHistory}
+        closeModal={closeHistory}
+      >
+        <ChatHistory closeHistory={closeHistory} />
       </BlackModal>
 
-      <BlackModal open={wishlistOpen} onClose={closeWishlist} closeModal={closeWishlist}>
+      <BlackModal
+        open={wishlistOpen}
+        onClose={closeWishlist}
+        closeModal={closeWishlist}
+      >
         <h3 className="text-center text-2xl font-bold">Wishlist</h3>
       </BlackModal>
 
-      <BlackModal open={settingsOpen} onClose={closeSettings} closeModal={closeSettings}>
+      <BlackModal
+        open={settingsOpen}
+        onClose={closeSettings}
+        closeModal={closeSettings}
+      >
         <h3 className="text-center text-2xl font-bold">Settings</h3>
       </BlackModal>
     </div>
