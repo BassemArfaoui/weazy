@@ -5,8 +5,10 @@ import PromptArea from '../components/main/prompt/PromptArea';
 import ChatArea from '../components/main/chat/ChatArea';
 import axios from 'axios';
 import Loading from '../components/tools/Loading';
+import errorImage from '../assets/images/error.png';
 
 import { useConversation } from "../Contexts/ConversationContext"
+import ErrorComponent from '../components/tools/ErrorComponent';
 
 const fetchChatById = async (chatId) => {
   const response = await axios.get(`${import.meta.env.VITE_BACKEND_API_URL}/chat/${chatId}`);
@@ -35,7 +37,7 @@ function ChatPage() {
     }, [data, setConversation]);
   
     if (isError) {
-      return <div className="h-full w-full px-0 flex justify-between items-center text-red-500">Error: {error.message}</div>;
+      return <ErrorComponent />
     }
   
     return (
@@ -52,6 +54,7 @@ function ChatPage() {
           />
         )}
         <PromptArea
+          disabled={isPending}
           conversation={conversation}
           setConversation={setConversation}
           setIsGenerating={setIsGenerating}

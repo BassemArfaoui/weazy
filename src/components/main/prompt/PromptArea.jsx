@@ -11,7 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Loading from "../../tools/Loading";
 import { notify, processNotify } from "../../tools/CustomToaster";
 
-function PromptArea({ conversation, setConversation, setIsGenerating }) {
+function PromptArea({ conversation, setConversation, setIsGenerating , disabled}) {
   const userId = "11111111-1111-1111-1111-111111111111";
   const navigate = useNavigate();
   const location = useLocation();
@@ -147,12 +147,17 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
   };
 
   const handleSubmit = async () => {
+
+    if(disabled || isCreating ) return 
+
     if (!promptText.trim() && uploadedImages.length === 0) return;
 
     if (uploadedImages.some(img => img.uploading)) {
       processNotify("Please wait for all images to finish uploading");
       return;
     }
+
+
 
     const newMessage = {
       sender: "user",

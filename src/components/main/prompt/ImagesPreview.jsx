@@ -19,7 +19,8 @@ function ImagesPreview({ uploadedImages, removeImage, openPhotoModal }) {
               e.stopPropagation();
               removeImage(index);
             }}
-            className="absolute -top-1 -right-1 aspect-square cursor-pointer bg-primary text-white rounded-full p-1 text-xs"
+            className="absolute top-1 right-1 translate-x-1/2 -translate-y-1/2 size-5 aspect-square cursor-pointer bg-primary text-white rounded-full p-1 text-xs flex items-center justify-center"
+
           >
             <MdClose />
           </button>

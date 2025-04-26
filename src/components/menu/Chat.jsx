@@ -63,12 +63,12 @@ function Chat({
             autoFocus
           />
         ) : (
-          <span className="truncate overflow-hidden whitespace-nowrap font-semibold capitalize py-4" onClick={openChat}>
+          <span className="truncate overflow-hidden whitespace-nowrap font-semibold capitalize py-3" onClick={openChat}>
             {chatEdits[chat.id] || chat.title}
           </span>
         )}
       </div>
-      <span className="flex items-center gap-2 shrink-0 py-4">
+      <span className="flex items-center gap-2 shrink-0 py-3">
         {editingId !== chat.id ? (
           <span
             className="p-2 hover:bg-blue-500 rounded-xl aspect-square"
