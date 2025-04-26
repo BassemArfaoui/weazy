@@ -3,20 +3,18 @@ import { HiArrowSmUp, HiOutlinePlus } from "react-icons/hi";
 import { IoMdClose } from "react-icons/io";
 import TooltipWrapper from "../../tools/TooltipWrapper";
 import PhotoDisplayer from "../../tools/PhotoDisplayer";
-import { FaSearch } from "react-icons/fa";
-import { FaLightbulb } from "react-icons/fa";
+import { FaSearch, FaLightbulb } from "react-icons/fa";
 import ImagesPreview from "./ImagesPreview";
 import TextArea from "./TextArea";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import Loading from "../../tools/Loading";
-
+import { notify, processNotify } from "../../tools/CustomToaster";
 
 function PromptArea({ conversation, setConversation, setIsGenerating }) {
-
   const userId = "11111111-1111-1111-1111-111111111111";
-  const navigate = useNavigate()
-  const location = useLocation()
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [isUploadMenuOpen, setIsUploadMenuOpen] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
@@ -24,7 +22,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [promptText, setPromptText] = useState("");
-  const [isCreating , setIisCreating] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const [isGeneratingInternal, setIsGeneratingInternal] = useState(false);
   const generationTimeoutRef = useRef(null);
 
@@ -37,47 +35,109 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
   const toggleSearchOption = () => setOption(prev => (prev === "search" ? "" : "search"));
   const toggleRecommendOption = () => setOption(prev => (prev === "recommend" ? "" : "recommend"));
 
-  const handleFileUpload = (event) => {
+  const handleFileUpload = async (event) => {
     const files = Array.from(event.target.files);
     const imageFiles = files.filter(file => file.type.startsWith("image/"));
 
     if (files.length !== imageFiles.length) {
-      alert("Only image files are allowed.");
+      notify("Only image files are allowed.");
       return;
     }
 
     if (uploadedImages.length + imageFiles.length > 3) {
-      alert("You can only upload a maximum of 3 images.");
+      notify("You can only upload a maximum of 3 images.");
       return;
     }
 
-    const imagePreviews = imageFiles.map(file => URL.createObjectURL(file));
-    setUploadedImages(prev => [...prev, ...imagePreviews]);
+    const previews = imageFiles.map(file => ({
+      url: URL.createObjectURL(file),
+      uploading: true,
+    }));
 
+    setUploadedImages(prev => [...prev, ...previews]);
     event.target.value = "";
-  };
 
-  const handlePaste = (event) => {
-    const items = event.clipboardData.items;
-    for (let item of items) {
-      if (item.type.startsWith("image/")) {
-        const file = item.getAsFile();
-        const imagePreview = URL.createObjectURL(file);
-        if (uploadedImages.length < 3) {
-          setUploadedImages(prev => [...prev, imagePreview]);
-        } else {
-          alert("You can only upload a maximum of 3 images.");
-        }
+    for (let i = 0; i < imageFiles.length; i++) {
+      const formData = new FormData();
+      formData.append("file", imageFiles[i]);
+
+      try {
+        const res = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/upload`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        const uploadedUrl = res.data.data.url;
+
+        setUploadedImages(prev => {
+          const newImages = [...prev];
+          const previewIndex = newImages.findIndex(img => img.url === previews[i].url);
+          if (previewIndex !== -1) {
+            newImages[previewIndex] = { url: uploadedUrl, uploading: false };
+          }
+          return newImages;
+        });
+      } catch (error) {
+        console.error("Image upload failed:", error);
+        notify("Failed to upload image.");
       }
     }
   };
+
+  const handlePaste = async (event) => {
+    const items = event.clipboardData.items;
+    const imageItems = Array.from(items).filter(item => item.type.startsWith("image/"));
+  
+    if (imageItems.length === 0) return;
+  
+    if (uploadedImages.length + imageItems.length > 3) {
+      notify("You can only upload a maximum of 3 images.");
+      return;
+    }
+  
+    const previews = imageItems.map(item => {
+      const file = item.getAsFile();
+      return {
+        file,
+        url: URL.createObjectURL(file),
+        uploading: true,
+      };
+    });
+  
+    setUploadedImages(prev => [...prev, ...previews.map(p => ({ url: p.url, uploading: true }))]);
+  
+    for (let i = 0; i < previews.length; i++) {
+      const formData = new FormData();
+      formData.append("file", previews[i].file);
+  
+      try {
+        const res = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/upload`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+  
+        const uploadedUrl = res.data.data.url;
+  
+        setUploadedImages(prev => {
+          const newImages = [...prev];
+          const previewIndex = newImages.findIndex(img => img.url === previews[i].url);
+          if (previewIndex !== -1) {
+            newImages[previewIndex] = { url: uploadedUrl, uploading: false };
+          }
+          return newImages;
+        });
+      } catch (error) {
+        console.error("Paste upload failed:", error);
+        notify("Failed to upload pasted image.");
+      }
+    }
+  };
+  
 
   const removeImage = (indexToRemove) => {
     setUploadedImages(prev => prev.filter((_, index) => index !== indexToRemove));
   };
 
   const openPhotoModal = (image) => {
-    setSelectedImage(image);
+    setSelectedImage(image.url);
     setIsPhotoModalOpen(true);
   };
 
@@ -86,17 +146,22 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
     setSelectedImage(null);
   };
 
-  const handleSubmit = async() => {
+  const handleSubmit = async () => {
     if (!promptText.trim() && uploadedImages.length === 0) return;
+
+    if (uploadedImages.some(img => img.uploading)) {
+      processNotify("Please wait for all images to finish uploading");
+      return;
+    }
 
     const newMessage = {
       sender: "user",
       message: promptText.trim(),
-      image_urls: uploadedImages,
+      image_urls: uploadedImages.map(img => img.url),
     };
 
-    if(conversation.length === 0 || location.pathname=== "/") {
-      await createChat(newMessage.message , newMessage.image_urls);
+    if (conversation.length === 0 || location.pathname === "/") {
+      await createChat(newMessage.message, newMessage.image_urls);
       generationTimeoutRef.current = setTimeout(() => {
         setConversation(prev => [
           ...prev,
@@ -109,28 +174,26 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
         setIsGenerating(false);
         setIsGeneratingInternal(false);
       }, 5000);
+    } else {
+      setConversation(prev => [...prev, newMessage]);
+      setPromptText("");
+      setUploadedImages([]);
+      setIsGenerating(true);
+      setIsGeneratingInternal(true);
+
+      generationTimeoutRef.current = setTimeout(() => {
+        setConversation(prev => [
+          ...prev,
+          {
+            id: prev.length + 1,
+            sender: "bot",
+            message: "Here’s your awesome result",
+          },
+        ]);
+        setIsGenerating(false);
+        setIsGeneratingInternal(false);
+      }, 10000);
     }
-    else
-    {
-
-    setConversation(prev => [...prev, newMessage]);
-    setPromptText("");
-    setUploadedImages([]);
-    setIsGenerating(true);
-    setIsGeneratingInternal(true);
-
-    generationTimeoutRef.current = setTimeout(() => {
-      setConversation(prev => [
-        ...prev,
-        {
-          id: prev.length + 1,
-          sender: "bot",
-          message: "Here’s your awesome result",
-        },
-      ]);
-      setIsGenerating(false);
-      setIsGeneratingInternal(false);
-    }, 10000);}
   };
 
   const cancelGeneration = () => {
@@ -146,23 +209,22 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
     }
   };
 
-  const createChat = async (message , image_urls) => {
+  const createChat = async (message, image_urls) => {
     try {
-      setIisCreating(true);
+      setIsCreating(true);
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/create-chat`, {
-        user_id : userId,
-        message ,
-        image_urls
+        user_id: userId,
+        message,
+        image_urls,
       });
-      setIsGenerating(true)
-      navigate(`/chat/${res.data.data.id}`)
-      setIisCreating(false);
-      
+      setIsGenerating(true);
+      navigate(`/chat/${res.data.data.id}`);
+      setIsCreating(false);
     } catch (error) {
-      alert("Error creating chat:", error);
+      notify("Error starting chat");
+      setIsCreating(false);
     }
   };
-
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -189,11 +251,12 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
       )}
 
       {/* Textarea */}
-        <TextArea promptText={promptText} setPromptText={setPromptText} handleKeyDown={handleKeyDown}  disabled={isGeneratingInternal || isCreating}/>
+      <TextArea promptText={promptText} setPromptText={setPromptText} handleKeyDown={handleKeyDown} disabled={isGeneratingInternal || isCreating} />
 
       {/* Controls */}
       <div className="w-full flex items-center justify-between px-6 py-3 gap-3">
         <div className="flex gap-3 items-center">
+          {/* Upload Button */}
           <div className="inline-flex relative mr-2" ref={uploadMenuRef}>
             <button
               className="p-2 rounded-full flex justify-center items-center border border-gray-500 hover:bg-gray-500/40 cursor-pointer size-10"
@@ -204,41 +267,25 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
 
             {isUploadMenuOpen && (
               <div className="absolute z-10 min-w-60 rounded-xl bg-secondary shadow-lg border border-gray-500 bottom-full md:left-1/2 -left-5 md:-translate-x-1/2 mb-3 px-1">
-                <div className="divide-y divide-gray-500"                    
->
+                <div className="divide-y divide-gray-500">
                   <div
-                    className={`p-1 cursor-pointer ${
-                      uploadedImages.length >= 3 ? "opacity-50 pointer-events-none" : ""
-                    }`}
+                    className={`p-1 cursor-pointer ${uploadedImages.length >= 3 ? "opacity-50 pointer-events-none" : ""}`}
                     onClick={() => {
                       if (uploadedImages.length < 3) {
                         fileInputRef.current.click();
                         closeUploadMenu();
                       }
                     }}
-                    disabled={isGeneratingInternal}
-
                   >
                     <div className="text-center text-white font-semibold hover:bg-gray-400/40 rounded-lg p-2 py-2 my-0.5">
                       From Device
                     </div>
-                    
                   </div>
 
-                  <div
-                    className={`p-1 cursor-pointer ${
-                      uploadedImages.length >= 3 ? "opacity-50 pointer-events-none" : ""
-                    }`}
-                    onClick={() => {
-                      
-                    }}
-                    disabled={true}
-
-                  >
+                  <div className="p-1 cursor-pointer opacity-50 pointer-events-none">
                     <div className="text-center text-white font-semibold hover:bg-gray-400/40 rounded-lg p-2 py-2 my-0.5">
                       From Google Drive
                     </div>
-                    
                   </div>
                 </div>
               </div>
@@ -255,43 +302,37 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
             disabled={uploadedImages.length >= 3 || isGeneratingInternal || isCreating}
           />
 
+          {/* Search Button */}
           <button
-            className={`border-1 md:px-3 justify-center  flex items-center gap-1 md:py-1  p-2 aspect-square md:aspect-auto size-10 md:h-10 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
-              option === "search"
-                ? "bg-gray-200 text-secondary"
-                : "hover:bg-gray-500/40"
+            className={`border-1 md:px-3 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-10 md:h-10 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
+              option === "search" ? "bg-gray-200 text-secondary" : "hover:bg-gray-500/40"
             }`}
             onClick={toggleSearchOption}
             disabled={isGeneratingInternal}
           >
-           <FaSearch className="inline-block mr-0" /> <span className="p-0 m-0 hidden md:inline-flex">Search  </span>
+            <FaSearch className="inline-block mr-0" /> <span className="hidden md:inline-flex">Search</span>
           </button>
 
+          {/* Recommend Button */}
           <button
-            className={`border-1 md:px-3 md:h-10 justify-center flex items-center h-10 gap-1 md:py-1  p-2 aspect-square md:aspect-auto size-10 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
-              option === "recommend"
-                ? "bg-gray-200 text-secondary"
-                : "hover:bg-gray-500/40"
+            className={`border-1 md:px-3 md:h-10 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-10 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
+              option === "recommend" ? "bg-gray-200 text-secondary" : "hover:bg-gray-500/40"
             }`}
             onClick={toggleRecommendOption}
             disabled={isGeneratingInternal}
           >
-          <FaLightbulb className="inline-block text-xl mr-0" /> <span className="p-0 m-0 hidden md:inline-flex">Recommend  </span>
-
+            <FaLightbulb className="inline-block text-xl mr-0" /> <span className="hidden md:inline-flex">Recommend</span>
           </button>
         </div>
 
         {/* Submit / Cancel */}
         <div className="flex items-center">
           <TooltipWrapper tooltip={isGeneratingInternal ? "Cancel" : "Submit"} placement="right">
-            {isCreating ?            
-            <button
-                disabled={true}
-                className="border-1 p-1 border-gray-500 bg-white text-gray-950 rounded-full size-10 flex justify-center items-center cursor-pointer"
-              >
-                <Loading  className="text-2xl" submit />
-              </button> :
-             isGeneratingInternal ? (
+            {isCreating ? (
+              <button disabled className="border-1 p-1 border-gray-500 bg-white text-gray-950 rounded-full size-10 flex justify-center items-center cursor-pointer">
+                <Loading className="text-2xl" submit />
+              </button>
+            ) : isGeneratingInternal ? (
               <button
                 onClick={cancelGeneration}
                 className="border-1 p-1 border-gray-500 bg-white text-gray-950 rounded-full size-10 flex justify-center items-center cursor-pointer"
