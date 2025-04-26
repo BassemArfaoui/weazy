@@ -30,10 +30,7 @@ function ChatArea({ conversation, setConversation, isGenerating }) {
   return (
     <div className="w-full h-full overflow-y-auto px-4 py-6 pb-8">
       <div className="max-w-[920px] mx-auto text-inter text-gray-200 flex flex-col justify-start gap-4">
-        {conversation.length === 0 ? (
-          <Welcome />
-        ) : (
-          conversation.map((msg, index) => (
+        {conversation.map((msg, index) => (
             <div
               key={msg.id + Math.random()}
               className={`flex flex-col gap-2 ${
@@ -52,7 +49,7 @@ function ChatArea({ conversation, setConversation, isGenerating }) {
               )}
             </div>
           ))
-        )}
+        }
 
         {isGenerating && (
           <div className="w-full flex items-center pb-4">

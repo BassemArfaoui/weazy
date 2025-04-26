@@ -2,7 +2,8 @@ import React from "react";
 import { FaPen } from "react-icons/fa";
 import { FaTrashCan } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+
 
 
 function Chat({
@@ -19,13 +20,23 @@ function Chat({
   lastChatRef,
   closeHistory,
 }) {
+
+  const location = useLocation()
+  const navigate = useNavigate()
+
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleSaveEdit(chat.id);
     }
   };
 
-  const navigate = useNavigate()
+  const deleteChat = (id , pIndex , cIndex ) => {
+    if (location.pathname === `/chat/${id}`) {
+       navigate(`/`)
+    }
+    handleDelete(id, pIndex, cIndex)
+  }
 
 
   const openChat = () => {
@@ -75,7 +86,7 @@ function Chat({
         )}
         <span
           className="p-2 hover:bg-red-500 rounded-xl aspect-square"
-          onClick={() => handleDelete(chat.id, pageIndex, chatIndex)}
+          onClick={()=>{deleteChat(chat.id , pageIndex , chatIndex)}}
         >
           <FaTrashCan />
         </span>

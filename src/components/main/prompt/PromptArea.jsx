@@ -8,7 +8,7 @@ import { FaLightbulb } from "react-icons/fa";
 import ImagesPreview from "./ImagesPreview";
 import TextArea from "./TextArea";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Loading from "../../tools/Loading";
 
 
@@ -16,6 +16,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
 
   const userId = "11111111-1111-1111-1111-111111111111";
   const navigate = useNavigate()
+  const location = useLocation()
 
   const [isUploadMenuOpen, setIsUploadMenuOpen] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
@@ -94,7 +95,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating }) {
       image_urls: uploadedImages,
     };
 
-    if(conversation.length === 0) {
+    if(conversation.length === 0 || location.pathname=== "/") {
       await createChat(newMessage.message , newMessage.image_urls);
       generationTimeoutRef.current = setTimeout(() => {
         setConversation(prev => [

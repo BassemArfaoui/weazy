@@ -3,6 +3,7 @@ import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Loading from "../tools/Loading";
 import Chat from "./Chat";
+import { notify } from "../tools/CustomToaster";
 
 const API_URL = import.meta.env.VITE_BACKEND_API_URL;
 const userId = "11111111-1111-1111-1111-111111111111";
@@ -109,7 +110,7 @@ function ChatHistory({ isOpen , closeHistory }) {
       queryClient.invalidateQueries(["chats", userId]); 
     } catch (error) {
       setChatEdits((prev) => ({ ...prev, [id]: originalTitle }));
-      alert(`Error updating chat: ${error.message || "Failed to update chat title"}`);
+      notify('Error renaming chat !')
     }
   };
   
@@ -150,7 +151,7 @@ function ChatHistory({ isOpen , closeHistory }) {
         return { ...oldData, pages: restoredPages };
       });
 
-      alert(`Error deleting chat: ${error.message || "Failed to delete chat"}`);
+      notify("Failed to delete chat")
     }
   };
 
