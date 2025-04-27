@@ -60,14 +60,14 @@ function PromptArea({ conversation, setConversation, setIsGenerating , disabled}
     for (let i = 0; i < imageFiles.length; i++) {
       const formData = new FormData();
       formData.append("file", imageFiles[i]);
-
+    
       try {
         const res = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/upload`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-
+    
         const uploadedUrl = res.data.data.url;
-
+    
         setUploadedImages(prev => {
           const newImages = [...prev];
           const previewIndex = newImages.findIndex(img => img.url === previews[i].url);
@@ -76,11 +76,14 @@ function PromptArea({ conversation, setConversation, setIsGenerating , disabled}
           }
           return newImages;
         });
+    
       } catch (error) {
         console.error("Image upload failed:", error);
+        setUploadedImages(prev => prev.filter(img => img.url !== previews[i].url));
         notify("Failed to upload image.");
       }
     }
+    
   };
 
   const handlePaste = async (event) => {
@@ -126,6 +129,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating , disabled}
         });
       } catch (error) {
         console.error("Paste upload failed:", error);
+        setUploadedImages(prev => prev.filter(img => img.url !== previews[i].url));
         notify("Failed to upload pasted image.");
       }
     }
