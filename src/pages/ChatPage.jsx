@@ -5,7 +5,6 @@ import PromptArea from '../components/main/prompt/PromptArea';
 import ChatArea from '../components/main/chat/ChatArea';
 import axios from 'axios';
 import Loading from '../components/tools/Loading';
-import errorImage from '../assets/images/error.png';
 
 import { useConversation } from "../Contexts/ConversationContext"
 import ErrorComponent from '../components/tools/ErrorComponent';

@@ -1,13 +1,12 @@
-import React from "react";
-import errorImage from '../../assets/images/error.png';
-import { TbMoodSad } from "react-icons/tb";
-import ErrorComponent from "../tools/ErrorComponent";
+import React from 'react'
+import { useConversation } from '../../Contexts/ConversationContext'
 
+function Test() {
 
-function PromptAreaSkeleton() {
+  const { model } = useConversation()
   return (
-    <ErrorComponent />
-  );
+    <div>{model}</div>
+  )
 }
 
-export default PromptAreaSkeleton;
+export default Test

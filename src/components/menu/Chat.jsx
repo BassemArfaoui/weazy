@@ -3,6 +3,7 @@ import { FaPen } from "react-icons/fa";
 import { FaTrashCan } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useConversation } from "../../Contexts/ConversationContext";
 
 
 
@@ -23,6 +24,7 @@ function Chat({
 
   const location = useLocation()
   const navigate = useNavigate()
+  const {setModel}= useConversation()
 
 
   const handleKeyDown = (e) => {
@@ -41,7 +43,8 @@ function Chat({
 
   const openChat = () => {
     closeHistory();
-    navigate(`/chat/${chat.id}`);
+    setModel(chat.model || "DeepFashion")
+    navigate(`/chat/${chat.id}?model=${chat.model || "DeepFashion"}`);
   };
 
   return (

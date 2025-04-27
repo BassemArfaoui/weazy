@@ -1,15 +1,15 @@
 import { IoIosArrowDown } from "react-icons/io";
+import { FaBars } from "react-icons/fa6";
+import { FaRegHeart } from "react-icons/fa";
 import profile from "../../assets/images/profile.png";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import NewChat from "../../assets/svg/NewChat";
 import History from "../../assets/svg/History";
 import BlackModal from "../tools/BlackModal";
-import { FaRegHeart } from "react-icons/fa";
-import { useEffect, useRef, useState } from "react";
 import TooltipWrapper from "../tools/TooltipWrapper";
 import ChatHistory from "../menu/ChatHistory";
-import { FaBars } from "react-icons/fa6";
 
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useConversation } from "../../Contexts/ConversationContext";
 
 const Menu = ({
@@ -23,24 +23,14 @@ const Menu = ({
   settingsOpen,
   openSettings,
 }) => {
-  const { setConversation } = useConversation();
-
-  const [searchParams, setSearchParams] = useSearchParams();
-  const paramModel = searchParams.get("model");
-
-  const [models] = useState([
-    "DeepFashion",
-    "Dataset 2",
-    "Dataset 3",
-    "Dataset 4",
-  ]);
+  const {
+    model,
+    setModel,
+    allowedModels,
+  } = useConversation();
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  const [model, setModel] = useState(
-    paramModel && models.includes(paramModel) ? paramModel : models[0]
-  );
 
   const [isModelsMenuOpen, setIsModelsMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -69,22 +59,13 @@ const Menu = ({
 
   const handleModelChange = (selectedModel) => {
     setModel(selectedModel);
-    setSearchParams({ model: selectedModel });
+    navigate(`/?model=${selectedModel}`);
     closeModelsMenu();
   };
 
   useEffect(() => {
-    if (!models.includes(paramModel)) {
-      setSearchParams({ model: models[0] });
-    }
-  }, [paramModel, models, setSearchParams]);
-
-  useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        modelsMenuRef.current &&
-        !modelsMenuRef.current.contains(event.target)
-      ) {
+      if (modelsMenuRef.current && !modelsMenuRef.current.contains(event.target)) {
         closeModelsMenu();
       }
     };
@@ -99,22 +80,17 @@ const Menu = ({
       }
     };
     document.addEventListener("mousedown", handleClickOutsideMenu);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutsideMenu);
+    return () => document.removeEventListener("mousedown", handleClickOutsideMenu);
   }, []);
 
   useEffect(() => {
     const handleClickOutsideMobileMenu = (event) => {
-      if (
-        mobileMenuRef.current &&
-        !mobileMenuRef.current.contains(event.target)
-      ) {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
         closeMobileMenu();
       }
     };
     document.addEventListener("mousedown", handleClickOutsideMobileMenu);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutsideMobileMenu);
+    return () => document.removeEventListener("mousedown", handleClickOutsideMobileMenu);
   }, []);
 
   return (
@@ -134,10 +110,10 @@ const Menu = ({
               </span>
             </button>
 
-            {isModelsMenuOpen && models.length > 1 && (
+            {isModelsMenuOpen && allowedModels.length > 1 && (
               <div className="absolute z-10 min-w-53 rounded-xl bg-secondary shadow-lg border border-gray-500 top-full left-0 mt-3 px-1">
                 <div className="divide-y divide-gray-500">
-                  {models
+                  {allowedModels
                     .filter((modelItem) => modelItem !== model)
                     .map((modelItem, index) => (
                       <div
@@ -184,10 +160,7 @@ const Menu = ({
             </TooltipWrapper>
           </div>
 
-          <div
-            className="flex flex-col md:hidden  relative"
-            ref={mobileMenuRef}
-          >
+          <div className="flex flex-col md:hidden relative" ref={mobileMenuRef}>
             <TooltipWrapper tooltip="Options" placement="left">
               <span
                 className="cursor-pointer flex hover:bg-gray-500/40 py-2 px-3 rounded-xl"
@@ -227,10 +200,7 @@ const Menu = ({
             )}
           </div>
 
-          <div
-            ref={menuRef}
-            className="relative ml-2 md:ml-5 cursor-pointer size-10"
-          >
+          <div ref={menuRef} className="relative ml-2 md:ml-5 cursor-pointer size-10">
             <div className="rounded-full bg-gray-300 border-2 border-gray-100 w-full h-full overflow-hidden">
               <img
                 src={profile}
@@ -267,28 +237,16 @@ const Menu = ({
         </div>
       </div>
 
-      {/* MODALS */}
-      <BlackModal
-        open={historyOpen}
-        onClose={closeHistory}
-        closeModal={closeHistory}
-      >
+      {/* Modals */}
+      <BlackModal open={historyOpen} onClose={closeHistory} closeModal={closeHistory}>
         <ChatHistory closeHistory={closeHistory} />
       </BlackModal>
 
-      <BlackModal
-        open={wishlistOpen}
-        onClose={closeWishlist}
-        closeModal={closeWishlist}
-      >
+      <BlackModal open={wishlistOpen} onClose={closeWishlist} closeModal={closeWishlist}>
         <h3 className="text-center text-2xl font-bold">Wishlist</h3>
       </BlackModal>
 
-      <BlackModal
-        open={settingsOpen}
-        onClose={closeSettings}
-        closeModal={closeSettings}
-      >
+      <BlackModal open={settingsOpen} onClose={closeSettings} closeModal={closeSettings}>
         <h3 className="text-center text-2xl font-bold">Settings</h3>
       </BlackModal>
     </div>

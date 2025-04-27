@@ -21,9 +21,9 @@ const ChatPage = lazy(() => import("../pages/ChatPage"));
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ConversationProvider>
         <div className="text-3xl font-bold *:font-inter">
           <Router>
+      <ConversationProvider>
             <CustomToaster />
             <Main>
               <Suspense
@@ -60,9 +60,9 @@ function App() {
                 </Routes>
               </Suspense>
             </Main>
+      </ConversationProvider>
           </Router>
         </div>
-      </ConversationProvider>
 
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
