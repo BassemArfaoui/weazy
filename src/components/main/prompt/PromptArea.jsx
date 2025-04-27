@@ -16,11 +16,10 @@ function PromptArea({ conversation, setConversation, setIsGenerating , disabled}
   const userId = "11111111-1111-1111-1111-111111111111";
   const navigate = useNavigate();
   const location = useLocation();
-  const {model} = useConversation()
+  const { model , option , setOption } = useConversation()
 
   const [isUploadMenuOpen, setIsUploadMenuOpen] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
-  const [option, setOption] = useState("search");
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [promptText, setPromptText] = useState("");
@@ -34,8 +33,14 @@ function PromptArea({ conversation, setConversation, setIsGenerating , disabled}
   const toggleUploadMenu = () => setIsUploadMenuOpen(prev => !prev);
   const closeUploadMenu = () => setIsUploadMenuOpen(false);
 
-  const toggleSearchOption = () => setOption(prev => (prev === "search" ? "" : "search"));
-  const toggleRecommendOption = () => setOption(prev => (prev === "recommend" ? "" : "recommend"));
+  const toggleSearchOption = () => {
+    setOption("search"); 
+  };
+  
+  const toggleRecommendOption = () => {
+    setOption(prev => (prev === "recommend" ? "search" : "recommend")); 
+  };
+  
 
   const handleFileUpload = async (event) => {
     const files = Array.from(event.target.files);
@@ -226,6 +231,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating , disabled}
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/create-chat`, {
         user_id: userId,
         message,
+        model,
         image_urls,
       });
       setIsGenerating(true);
@@ -252,6 +258,13 @@ function PromptArea({ conversation, setConversation, setIsGenerating , disabled}
     document.addEventListener("paste", handlePasteEvent);
     return () => document.removeEventListener("paste", handlePasteEvent);
   }, [uploadedImages]);
+
+  useEffect(() => {
+    if (!option) {
+      setOption("search");
+    }
+  }, [option]);
+  
 
   return (
     <div className="bg-secondary w-full max-w-[800px] border-1 border-gray-500 rounded-3xl items-center justify-between text-inter text-xl text-gray-300 flex flex-col gap-1 mb-2 md:mb-4 pb-1 pt-2">

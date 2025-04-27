@@ -43,8 +43,8 @@ function Chat({
 
   const openChat = () => {
     closeHistory();
-    setModel(chat.model || "DeepFashion")
-    navigate(`/chat/${chat.id}?model=${chat.model || "DeepFashion"}`);
+    setModel(chat.model)
+    navigate(`/chat/${chat.id}?model=${chat.model}`);
   };
 
   return (

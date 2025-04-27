@@ -50,6 +50,7 @@ const Menu = ({
 
   const openNewChat = () => {
     if (location.pathname !== "/") {
+      setModel("DeepFashion")
       navigate("/");
     }
     if (isMobileMenuOpen) {

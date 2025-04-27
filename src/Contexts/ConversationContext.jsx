@@ -4,6 +4,10 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 const ConversationContext = createContext();
 
 export const ConversationProvider = ({ children }) => {
+  const [conversation, setConversation] = useState([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [option, setOption] = useState("search");
+
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
 
@@ -33,8 +37,8 @@ export const ConversationProvider = ({ children }) => {
     }
   }, [location.search, allowedModels, setSearchParams]);
 
-  const [conversation, setConversation] = useState([]);
-  const [isGenerating, setIsGenerating] = useState(false);
+
+
 
   return (
     <ConversationContext.Provider value={{
@@ -45,6 +49,8 @@ export const ConversationProvider = ({ children }) => {
       model,
       setModel,
       allowedModels,
+      option , 
+      setOption
     }}>
       {children}
     </ConversationContext.Provider>
