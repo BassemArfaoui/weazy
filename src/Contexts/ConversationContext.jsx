@@ -7,15 +7,18 @@ export const ConversationProvider = ({ children }) => {
   const [conversation, setConversation] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [option, setOption] = useState("search");
+  const [imageModel , setImageModel]=useState("vgg16")
+  const [resultLimit, setResultLimit] = useState(10); 
+
 
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
 
   const allowedModels = [
-    "DeepFashion",
-    "Dataset 2",
-    "Dataset 3",
-    "Dataset 4",
+    "Fashion",
+    "Dataset2",
+    "Dataset3",
+    "Dataset4",
   ];
 
   const paramModel = searchParams.get("model");
@@ -50,7 +53,11 @@ export const ConversationProvider = ({ children }) => {
       setModel,
       allowedModels,
       option , 
-      setOption
+      setOption ,
+      imageModel ,
+      setImageModel,
+      resultLimit,
+      setResultLimit
     }}>
       {children}
     </ConversationContext.Provider>

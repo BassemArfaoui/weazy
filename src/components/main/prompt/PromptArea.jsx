@@ -7,16 +7,18 @@ import { FaSearch, FaLightbulb } from "react-icons/fa";
 import ImagesPreview from "./ImagesPreview";
 import TextArea from "./TextArea";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Loading from "../../tools/Loading";
 import { notify, processNotify } from "../../tools/CustomToaster";
 import { useConversation } from "../../../Contexts/ConversationContext";
 
 function PromptArea({ conversation, setConversation, setIsGenerating , disabled}) {
+  const maxImg = import.meta.env.VITE_MAX_IMAGES
   const userId = "11111111-1111-1111-1111-111111111111";
   const navigate = useNavigate();
   const location = useLocation();
-  const { model , option , setOption } = useConversation()
+  const {chatId} = useParams()
+  const { model , option , setOption , imageModel , resultLimit  } = useConversation()
 
   const [isUploadMenuOpen, setIsUploadMenuOpen] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
@@ -51,8 +53,8 @@ function PromptArea({ conversation, setConversation, setIsGenerating , disabled}
       return;
     }
 
-    if (uploadedImages.length + imageFiles.length > 3) {
-      notify("You can only upload a maximum of 3 images.");
+    if (uploadedImages.length + imageFiles.length > parseInt(maxImg) ) {
+      notify(`You can only upload a maximum of ${maxImg} ${"image"+ (parseInt(maxImg) > 1 ? "s" : "") } .`);
       return;
     }
 
@@ -99,8 +101,8 @@ function PromptArea({ conversation, setConversation, setIsGenerating , disabled}
   
     if (imageItems.length === 0) return;
   
-    if (uploadedImages.length + imageItems.length > 3) {
-      notify("You can only upload a maximum of 3 images.");
+    if (uploadedImages.length + imageItems.length >parseInt(maxImg)) {
+      notify(`You can only upload a maximum of ${maxImg} ${"image"+ (parseInt(maxImg) > 1 ? "s" : "") } .`);
       return;
     }
   
@@ -157,60 +159,196 @@ function PromptArea({ conversation, setConversation, setIsGenerating , disabled}
     setSelectedImage(null);
   };
 
+
+  function extractProductIds(products) {
+    return products.map(product => product.id);
+  }
+
   const handleSubmit = async () => {
-
-    if(disabled || isCreating ) return 
-
+    if (disabled || isCreating) return;
+  
     if (!promptText.trim() && uploadedImages.length === 0) return;
-
+  
     if (uploadedImages.some(img => img.uploading)) {
       processNotify("Please wait for all images to finish uploading");
       return;
     }
-
-
-
+  
     const newMessage = {
+      id: Date.now(),
       sender: "user",
       message: promptText.trim(),
       image_urls: uploadedImages.map(img => img.url),
     };
-
+  
     if (conversation.length === 0 || location.pathname === "/") {
-      await createChat(newMessage.message, newMessage.image_urls);
-      generationTimeoutRef.current = setTimeout(() => {
-        setConversation(prev => [
-          ...prev,
-          {
-            id: prev.length + 1,
-            sender: "bot",
-            message: "Here’s your awesome result",
-          },
-        ]);
+      let res
+      try{
+      res = await createChat(newMessage.message, newMessage.image_urls);
+      }
+      catch (err)
+      {
+        console.log(err.message)
+        notify("Failed to create chat.")
+        navigate("/")
+        return
+      }
+
+      try {
+        setIsGenerating(true);
+        setIsGeneratingInternal(true);
+  
+        const imageUrl = uploadedImages[0]?.url;
+  
+        const requestData = {
+          image_url: imageUrl,
+          chat_id: res.data.data.id,
+          sender_role: "user",
+          top_k: resultLimit,
+          text: promptText.trim() ,
+        };
+
+        let api ;
+  
+        if(!requestData.text)
+        { 
+          api = `${import.meta.env.VITE_MODELS_API_URL}/${model.toLowerCase()}/search-by-image/${imageModel}`
+        }
+        else if (!requestData.image_url)
+        {
+          processNotify("using text model")
+        }
+        else 
+        {
+          processNotify("using hybrid model")
+        }
+
+        const response = await axios.post(api,requestData);
+  
+        const botMessage = {
+          id: Date.now(),
+          sender: "model",
+          message: response.data.message || "Here is what i found",
+          image_urls: response.data.image_urls || [] ,
+          products : response.data.products || [] ,
+        };  
+  
+        setConversation(prev => [...prev, botMessage]);
         setIsGenerating(false);
         setIsGeneratingInternal(false);
-      }, 5000);
+
+        const resp= {
+          chat_id : res.data.data.id,
+          sender_role: "model",
+          message: response.data.message || "Here is what i found",
+          image_urls: response.data.image_urls || [] ,
+          products : extractProductIds(response.data.products) || [] ,
+        }
+
+        try{
+          await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/save-response`, resp);
+          }catch(error)
+          {
+            notify("failed to save response")
+          }
+
+        
+      } catch (error) {
+        console.error("Error contacting backend:", error);
+        notify("Failed to get a response.");
+        setIsGenerating(false);
+        setIsGeneratingInternal(false);
+      } 
+
+ 
+
+
+  
     } else {
+      // If it is a continuation of chat
       setConversation(prev => [...prev, newMessage]);
       setPromptText("");
       setUploadedImages([]);
       setIsGenerating(true);
       setIsGeneratingInternal(true);
+      
+  
+      try {
+        const imageUrl = uploadedImages[0]?.url;
+  
+        const requestData = {
+          image_url: imageUrl,
+          chat_id: chatId,
+          sender_role: "user",
+          top_k: resultLimit,
+          text: promptText.trim(),
+        };
+  
+        let api ;
+  
+        if(!requestData.text)
+        { 
+          api = `${import.meta.env.VITE_MODELS_API_URL}/${model.toLowerCase()}/search-by-image/${imageModel}`
+        }
+        else if (!requestData.image_url)
+        {
+          processNotify("using text model")
+        }
+        else 
+        {
+          processNotify("using hybrid model")
+        }
 
-      generationTimeoutRef.current = setTimeout(() => {
-        setConversation(prev => [
-          ...prev,
-          {
-            id: prev.length + 1,
-            sender: "bot",
-            message: "Here’s your awesome result",
-          },
-        ]);
+        const response = await axios.post(api,requestData);
+  
+  
+        const botMessage = {
+          id: Date.now(),
+          sender: "model",
+          message: response.data.message || "Here’s what i found",
+          image_urls: response.data.image_urls || [] ,
+          products : response.data.products || [] ,
+
+        };
+  
+        setConversation(prev => [...prev, botMessage]);
         setIsGenerating(false);
         setIsGeneratingInternal(false);
-      }, 10000);
+
+        const savePayload = {
+          request: {
+            chat_id: requestData.chat_id,
+            sender_role: requestData.sender_role,
+            text: requestData.text,
+            image_urls: requestData.image_url ? [requestData.image_url] : [],
+            products: [],
+          },
+          response: {
+            chat_id: requestData.chat_id,
+            sender_role: "model",
+            text: botMessage.message,
+            image_urls: botMessage.image_urls,
+            products:  extractProductIds(botMessage.products),
+          },
+        };
+        try{
+        await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/save-payload`, savePayload);
+        }catch(error)
+        {
+          notify("failed to save messages")
+        }
+        
+      } catch (error) {
+        console.error("Error contacting backend:", error);
+        notify("Failed to fetch the response.");
+        setConversation(prev => prev.filter(message => message.id !== newMessage.id));
+        setUploadedImages([]);
+        setIsGenerating(false);
+        setIsGeneratingInternal(false);
+      } 
     }
   };
+  
 
   const cancelGeneration = () => {
     clearTimeout(generationTimeoutRef.current);
@@ -237,6 +375,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating , disabled}
       setIsGenerating(true);
       navigate(`/chat/${res.data.data.id}?model=${model}`);
       setIsCreating(false);
+      return res;
     } catch (error) {
       notify("Error starting chat");
       setIsCreating(false);
@@ -293,9 +432,9 @@ function PromptArea({ conversation, setConversation, setIsGenerating , disabled}
               <div className="absolute z-10 min-w-60 rounded-xl bg-secondary shadow-lg border border-gray-500 bottom-full md:left-1/2 -left-5 md:-translate-x-1/2 mb-3 px-1">
                 <div className="divide-y divide-gray-500">
                   <div
-                    className={`p-1 cursor-pointer ${uploadedImages.length >= 3 ? "opacity-50 pointer-events-none" : ""}`}
+                    className={`p-1 cursor-pointer ${uploadedImages.length >= parseInt(maxImg) ? "opacity-50 pointer-events-none" : ""}`}
                     onClick={() => {
-                      if (uploadedImages.length < 3) {
+                      if (uploadedImages.length < parseInt(maxImg)) {
                         fileInputRef.current.click();
                         closeUploadMenu();
                       }
@@ -323,7 +462,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating , disabled}
             multiple
             onChange={handleFileUpload}
             className="hidden"
-            disabled={uploadedImages.length >= 3 || isGeneratingInternal || isCreating}
+            disabled={uploadedImages.length >= parseInt(maxImg) || isGeneratingInternal || isCreating}
           />
 
           {/* Search Button */}

@@ -1,11 +1,11 @@
 import React from 'react'
 import { useConversation } from '../../Contexts/ConversationContext'
+import ProductCard from '../main/chat/ProductCard'
 
 function Test() {
 
-  const { model } = useConversation()
   return (
-    <div>{model}</div>
+   <ProductCard />
   )
 }
 

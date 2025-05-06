@@ -11,6 +11,7 @@ import ChatHistory from "../menu/ChatHistory";
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useConversation } from "../../Contexts/ConversationContext";
+import Settings from "../menu/Settings";
 
 const Menu = ({
   historyOpen,
@@ -50,7 +51,7 @@ const Menu = ({
 
   const openNewChat = () => {
     if (location.pathname !== "/") {
-      setModel("DeepFashion")
+      setModel("Fashion")
       navigate("/");
     }
     if (isMobileMenuOpen) {
@@ -249,6 +250,7 @@ const Menu = ({
 
       <BlackModal open={settingsOpen} onClose={closeSettings} closeModal={closeSettings}>
         <h3 className="text-center text-2xl font-bold">Settings</h3>
+        <Settings />
       </BlackModal>
     </div>
   );

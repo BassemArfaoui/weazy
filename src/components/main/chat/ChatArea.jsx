@@ -4,6 +4,7 @@ import PulseLoader from "../../tools/PulseLoader";
 import Welcome from "./Welcome";
 import Message from "./Message";
 import PictureMessages from "./PictureMessages";
+import ProductsList from "./ProductsList"
 
 function ChatArea({ conversation, setConversation, isGenerating }) {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -31,25 +32,32 @@ function ChatArea({ conversation, setConversation, isGenerating }) {
     <div className="w-full h-full overflow-y-auto px-4 py-6 pb-8">
       <div className="max-w-[920px] mx-auto text-inter text-gray-200 flex flex-col justify-start gap-4">
         {conversation.map((msg, index) => (
-            <div
-              key={msg.id + Math.random()}
-              className={`flex flex-col gap-2 ${
-                msg.sender === "user" ? "items-end" : "items-start"
-              }`}
-            >
-              {msg.message && (
-                <Message message={msg.message} sender={msg.sender} />
-              )}
-              {msg.image_urls && msg.image_urls.length > 0 && (
-                <PictureMessages sender={msg.message} image_urls={msg.image_urls} openPhotoModal={openPhotoModal} />
-              )}
+          <div
+            key={msg.id + Math.random()}
+            className={`flex flex-col gap-2 mt-6 ${
+              msg.sender === "user" ? "items-end" : "items-start"
+            }`}
+          >
+            {/* Message Text */}
+            {msg.message && (
+              <Message message={msg.message} sender={msg.sender} />
+            )}
+            
+            {/* Message Images */}
+            {msg.image_urls && msg.image_urls.length > 0 && (
+              <PictureMessages sender={msg.sender} image_urls={msg.image_urls} openPhotoModal={openPhotoModal} />
+            )}
 
-              {index === conversation.length - 1 && (
-                <div ref={lastMessageRef} />
-              )}
-            </div>
-          ))
-        }
+            {/* Display Products */}
+            {msg.products && msg.products.length > 0 && (
+                <ProductsList products={msg.products} />
+            )}
+
+            {index === conversation.length - 1 && (
+              <div ref={lastMessageRef} />
+            )}
+          </div>
+        ))}
 
         {isGenerating && (
           <div className="w-full flex items-center pb-4">
