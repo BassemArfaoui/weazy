@@ -1,12 +1,15 @@
-import React from 'react'
-import { useConversation } from '../../Contexts/ConversationContext'
-import ProductCard from '../main/chat/ProductCard'
+import React from 'react';
 
 function Test() {
-
   return (
-   <ProductCard />
-  )
+    <div onClick={() => console.log('Div clicked')}>
+      <button onClick={(e) => {
+        console.log('Button clicked');
+      }}>
+        Click Me
+      </button>
+    </div>
+  );
 }
 
-export default Test
+export default Test;

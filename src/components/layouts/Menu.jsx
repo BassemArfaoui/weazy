@@ -12,6 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useConversation } from "../../Contexts/ConversationContext";
 import Settings from "../menu/Settings";
+import Wishlist from "../menu/Wishlist";
 
 const Menu = ({
   historyOpen,
@@ -245,7 +246,7 @@ const Menu = ({
       </BlackModal>
 
       <BlackModal open={wishlistOpen} onClose={closeWishlist} closeModal={closeWishlist}>
-        <h3 className="text-center text-2xl font-bold">Wishlist</h3>
+        <Wishlist closeWishlist={closeWishlist}/>
       </BlackModal>
 
       <BlackModal open={settingsOpen} onClose={closeSettings} closeModal={closeSettings}>

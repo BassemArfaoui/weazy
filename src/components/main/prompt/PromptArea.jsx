@@ -12,7 +12,7 @@ import Loading from "../../tools/Loading";
 import { notify, processNotify } from "../../tools/CustomToaster";
 import { useConversation } from "../../../Contexts/ConversationContext";
 
-function PromptArea({ conversation, setConversation, setIsGenerating , disabled}) {
+function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerating , disabled}) {
   const maxImg = import.meta.env.VITE_MAX_IMAGES
   const userId = "11111111-1111-1111-1111-111111111111";
   const navigate = useNavigate();
@@ -165,7 +165,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating , disabled}
   }
 
   const handleSubmit = async () => {
-    if (disabled || isCreating) return;
+    if (disabled || isCreating || isGenerating) return;
   
     if (!promptText.trim() && uploadedImages.length === 0) return;
   

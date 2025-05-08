@@ -9,8 +9,10 @@ import Loading from '../components/tools/Loading';
 import { useConversation } from "../Contexts/ConversationContext"
 import ErrorComponent from '../components/tools/ErrorComponent';
 
+const userId = "11111111-1111-1111-1111-111111111111";
+
 const fetchChatById = async (chatId) => {
-  const response = await axios.get(`${import.meta.env.VITE_BACKEND_API_URL}/chat/${chatId}`);
+  const response = await axios.get(`${import.meta.env.VITE_BACKEND_API_URL}/chat/${chatId}/${userId}`);
   return response.data;
 };
 
@@ -56,6 +58,7 @@ function ChatPage() {
           disabled={isPending}
           conversation={conversation}
           setConversation={setConversation}
+          isGenerating={isGenerating}
           setIsGenerating={setIsGenerating}
         />
       </div>

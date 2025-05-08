@@ -7,6 +7,7 @@ const TooltipWrapper = ({
   placement = 'top',
   enterDelay = 1500, 
   leaveDelay = 200,  
+  small
 }) => {
   return (
     <Tooltip
@@ -20,7 +21,7 @@ const TooltipWrapper = ({
           sx: {
             backgroundColor: '#0d0d0d',  
             color: '#fff',               
-            fontSize: '1.15rem', 
+            fontSize: !small ? '1.15rem' : '0.85rem', 
             fontWeight: 900,
             padding: '0.70rem 0.9rem',
             borderRadius: '0.5rem', 
