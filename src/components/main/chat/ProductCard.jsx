@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { FaShoppingCart, FaRegHeart ,FaExpand ,FaHeart } from 'react-icons/fa';
+import { FaShoppingCart, FaRegHeart ,FaQuestion  ,FaHeart } from 'react-icons/fa';
 import { FaArrowUpRightFromSquare } from "react-icons/fa6";
 import { notify, successNotify } from '../../tools/CustomToaster';
 import axios from 'axios';
 import {useConversation} from "../../../Contexts/ConversationContext"
+import { LuSparkles } from "react-icons/lu";
 
 import PhotoDisplayer from '../../tools/PhotoDisplayer';
 import TooltipWrapper from '../../tools/TooltipWrapper';
@@ -147,25 +148,33 @@ function ProductCard({product , setWishlist , wishlist , closeWishlist}) {
   return (
     <div
       className="min-w-[125px] max-w-[125px] rounded-lg shadow-lg overflow-hidden bg-gray-800 text-white cursor-pointer"
-      onClick={askForDescription}
+      
     >
       <div className="relative h-29 bg-gray-700 flex items-center justify-center">
         <img
           src={product.link}
           alt={product.productdisplayname}
           className="h-full w-full object-cover"
-        />
-
-        {/* Full Screen Icon at bottom right */}
-        <button
-          className="absolute bottom-1 right-1 text-white p-2 aspect-square cursor-pointer bg-black opacity-60 hover:opacity-85  rounded-full"
-          onClick={(e) => {
+                onClick={(e) => {
             e.stopPropagation();
             openPhotoModal(product.link);
           }}
+        />
+
+        {/* Full Screen Icon at bottom right */}
+        <TooltipWrapper tooltip="generate product description" placement='bottom' small>
+        <button
+          className="absolute bottom-1 right-1 text-white p-1.5 aspect-square cursor-pointer bg-gray-700/90 hover:bg-black/70  rounded-full"
+    
+          onClick={(e)=>{
+            e.stopPropagation()
+            askForDescription()
+          }}
         >
-          <FaExpand className="size-[10px]" />
+          <LuSparkles className="size-[15px] text-yellow-400" />
         </button>
+        </TooltipWrapper>
+
       </div>
 
       <div className="p-2 space-y-2">

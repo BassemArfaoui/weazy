@@ -240,9 +240,9 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
         const resp= {
           chat_id : res.data.data.id,
           sender_role: "model",
-          message: response.data.message || "Here is what i found",
+          text: response.data.message || "Here is what i found",
           image_urls: response.data.image_urls || [] ,
-          products : extractProductIds(response.data.products) || [] ,
+          products : extractProductIds(response.data.products)  ,
         }
 
         try{
