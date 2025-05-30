@@ -6,7 +6,7 @@ function Welcome() {
       <div className="text-gray-300 text-xl text-center">
         Hello <span className="text-white">Bassem </span>,
       </div>
-      <div className="text-gray-300 text-center text-2xl">
+      <div className="text-gray-300 text-center text-2xl px-3">
         What do you want to find today?
       </div>
     </div>

@@ -11,6 +11,8 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Loading from "../../tools/Loading";
 import { notify, processNotify } from "../../tools/CustomToaster";
 import { useConversation } from "../../../Contexts/ConversationContext";
+import { RiSearchEyeLine } from "react-icons/ri";
+
 
 function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerating , disabled}) {
   const maxImg = import.meta.env.VITE_MAX_IMAGES
@@ -18,7 +20,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
   const navigate = useNavigate();
   const location = useLocation();
   const {chatId} = useParams()
-  const { model , option , setOption , imageModel , resultLimit  } = useConversation()
+  const { model , option , setOption , imageModel , resultLimit , setDeepsearchLogs  } = useConversation()
 
   const [isUploadMenuOpen, setIsUploadMenuOpen] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
@@ -36,11 +38,16 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
   const closeUploadMenu = () => setIsUploadMenuOpen(false);
 
   const toggleSearchOption = () => {
-    setOption("search"); 
+    setOption(prev => (prev === "search" ? "none" : "search"));  
   };
   
   const toggleRecommendOption = () => {
-    setOption(prev => (prev === "recommend" ? "search" : "recommend")); 
+    setOption(prev => (prev === "recommend" ? "none" : "recommend")); 
+
+  };
+
+  const toggleDeepSearchOption = () => {
+    setOption(prev => (prev === "deepsearch" ? "none" : "deepsearch")); 
   };
   
 
@@ -201,27 +208,18 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
         const imageUrl = uploadedImages[0]?.url;
   
         const requestData = {
-          image_url: imageUrl,
+          tool : option , 
+          image_url: imageUrl || "",
           chat_id: res.data.data.id,
           sender_role: "user",
           top_k: resultLimit,
           text: promptText.trim() ,
         };
 
-        let api ;
+       
   
-        if(!requestData.text)
-        { 
-          api = `${import.meta.env.VITE_MODELS_API_URL}/${model.toLowerCase()}/search-by-image/${imageModel}`
-        }
-        else if (!requestData.image_url)
-        {
-          processNotify("using text model")
-        }
-        else 
-        {
-          processNotify("using hybrid model")
-        }
+
+        const api = `${import.meta.env.VITE_MODELS_API_URL}/${model.toLowerCase()}/process/${imageModel}`
 
         const response = await axios.post(api,requestData);
   
@@ -277,27 +275,16 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
         const imageUrl = uploadedImages[0]?.url;
   
         const requestData = {
-          image_url: imageUrl,
+          tool : option ,
+          image_url: imageUrl || "",
           chat_id: chatId,
           sender_role: "user",
           top_k: resultLimit,
           text: promptText.trim(),
         };
+
+        const api = `${import.meta.env.VITE_MODELS_API_URL}/${model.toLowerCase()}/process/${imageModel}`
   
-        let api ;
-  
-        if(!requestData.text)
-        { 
-          api = `${import.meta.env.VITE_MODELS_API_URL}/${model.toLowerCase()}/search-by-image/${imageModel}`
-        }
-        else if (!requestData.image_url)
-        {
-          processNotify("using text model")
-        }
-        else 
-        {
-          processNotify("using hybrid model")
-        }
 
         const response = await axios.post(api,requestData);
   
@@ -474,6 +461,16 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
             disabled={isGeneratingInternal}
           >
             <FaSearch className="inline-block mr-0" /> <span className="hidden md:inline-flex">Search</span>
+          </button>
+
+          <button
+            className={`border-1 md:px-3 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-10 md:h-10 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
+              option === "deepsearch" ? "bg-gray-200 text-secondary" : "hover:bg-gray-500/40"
+            }`}
+            onClick={toggleDeepSearchOption}
+            disabled={isGeneratingInternal}
+          >
+            <RiSearchEyeLine className="inline-block mr-0 text-[1.2em]" /> <span className="hidden md:inline-flex">DeepSearch</span>
           </button>
 
           {/* Recommend Button */}

@@ -162,6 +162,7 @@ function ProductCard({product , setWishlist , wishlist , closeWishlist}) {
         />
 
         {/* Full Screen Icon at bottom right */}
+        {!setWishlist && !wishlist && !closeWishlist  && 
         <TooltipWrapper tooltip="generate product description" placement='bottom' small>
         <button
           className="absolute bottom-1 right-1 text-white p-1.5 aspect-square cursor-pointer bg-gray-700/90 hover:bg-black/70  rounded-full"
@@ -173,7 +174,7 @@ function ProductCard({product , setWishlist , wishlist , closeWishlist}) {
         >
           <LuSparkles className="size-[15px] text-yellow-400" />
         </button>
-        </TooltipWrapper>
+        </TooltipWrapper>}
 
       </div>
 

@@ -18,7 +18,7 @@ const fetchChatById = async (chatId) => {
 
 function ChatPage() {
     const { chatId } = useParams();
-    const { conversation, setConversation, isGenerating, setIsGenerating } = useConversation();
+    const { conversation, setConversation, isGenerating, setIsGenerating , deepsearchLogs} = useConversation();
   
     const {
       data,
@@ -52,6 +52,7 @@ function ChatPage() {
             conversation={conversation}
             setConversation={setConversation}
             isGenerating={isGenerating}
+            deepsearchLogs={deepsearchLogs}
           />
         )}
         <PromptArea

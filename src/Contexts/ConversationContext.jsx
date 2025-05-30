@@ -5,8 +5,9 @@ const ConversationContext = createContext();
 
 export const ConversationProvider = ({ children }) => {
   const [conversation, setConversation] = useState([]);
+  const [deepsearchLogs, setDeepsearchLogs] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [option, setOption] = useState("search");
+  const [option, setOption] = useState("none");
   const [imageModel , setImageModel]=useState("vgg16")
   const [resultLimit, setResultLimit] = useState(10); 
 
@@ -57,7 +58,9 @@ export const ConversationProvider = ({ children }) => {
       imageModel ,
       setImageModel,
       resultLimit,
-      setResultLimit
+      setResultLimit,
+      deepsearchLogs , 
+      setDeepsearchLogs
     }}>
       {children}
     </ConversationContext.Provider>

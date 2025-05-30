@@ -6,7 +6,7 @@ import Message from "./Message";
 import PictureMessages from "./PictureMessages";
 import ProductsList from "./ProductsList"
 
-function ChatArea({ conversation, setConversation, isGenerating }) {
+function ChatArea({ conversation, isGenerating , deepsearchLogs }) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
 
@@ -59,11 +59,21 @@ function ChatArea({ conversation, setConversation, isGenerating }) {
           </div>
         ))}
 
-        {isGenerating && (
+        {isGenerating && deepsearchLogs.length > 0 && (
+        <div className="deepsearch-log-loader">
+          {deepsearchLogs.map((log, idx) => (
+            <div key={idx} className="log-line">{log}</div>
+          ))}
+        </div>
+        )}
+
+        {isGenerating &&  deepsearchLogs.length === 0 && (
           <div className="w-full flex items-center pb-4">
             <PulseLoader />
           </div>
         )}
+
+
       </div>
 
       <PhotoDisplayer
