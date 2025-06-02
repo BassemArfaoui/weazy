@@ -14,12 +14,12 @@ function PromptAreaSkeleton() {
           {/* Controls Placeholder */}
           <div className="flex justify-between items-center w-full mt-2">
             <div className="flex gap-3">
-              <div className="bg-gray-400/20 rounded-full size-10 mr-3" />
-              <div className="bg-gray-400/20 md:rounded-3xl md:w-29  size-10 rounded-full" />
-              <div className="bg-gray-400/20 md:rounded-3xl md:w-38  size-10 rounded-full" />
-              <div className="bg-gray-400/20 md:rounded-3xl md:w-35  size-10 rounded-full" />
+              <div className="bg-gray-400/20 rounded-full md:size-9.5 size-9 mr-3" />
+              <div className="bg-gray-400/20 md:rounded-3xl md:w-29  size-9 rounded-full" />
+              <div className="bg-gray-400/20 md:rounded-3xl md:w-38  size-9 rounded-full" />
+              <div className="bg-gray-400/20 md:rounded-3xl md:w-35  size-9 rounded-full" />
             </div>
-            <div className="bg-gray-400/30 rounded-full size-10" />
+            <div className="bg-gray-400/30 rounded-full md:size-9.5 size-9" />
           </div>
         </div>
       </div>

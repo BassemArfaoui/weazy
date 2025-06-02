@@ -405,11 +405,11 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
 
       {/* Controls */}
       <div className="w-full flex items-center justify-between px-6 py-3 gap-3">
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-4 items-center">
           {/* Upload Button */}
           <div className="inline-flex relative mr-2" ref={uploadMenuRef}>
             <button
-              className="p-2 rounded-full flex justify-center items-center border border-gray-500 hover:bg-gray-500/40 cursor-pointer size-10"
+              className="p-2 rounded-full flex justify-center items-center border border-gray-500 hover:bg-gray-500/40 cursor-pointer md:size-9.5 size-9"
               onClick={toggleUploadMenu}
             >
               <HiOutlinePlus className="text-2xl" />
@@ -454,48 +454,64 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
 
           {/* Search Button */}
           <button
-            className={`border-1 md:px-3 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-10 md:h-10 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
+            className={`border-1 md:px-3 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-9 md:h-9 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
               option === "search" ? "bg-gray-200 text-secondary" : "hover:bg-gray-500/40"
             }`}
             onClick={toggleSearchOption}
             disabled={isGeneratingInternal}
           >
-            <FaSearch className="inline-block mr-0" /> <span className="hidden md:inline-flex">Search</span>
+            <FaSearch className="inline-block mr-0" /> <span className="hidden md:inline-flex text-[17px]">Search</span>
           </button>
 
-          <button
-            className={`border-1 md:px-3 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-10 md:h-10 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
-              option === "deepsearch" ? "bg-gray-200 text-secondary" : "hover:bg-gray-500/40"
-            }`}
-            onClick={toggleDeepSearchOption}
-            disabled={isGeneratingInternal}
-          >
-            <RiSearchEyeLine className="inline-block mr-0 text-[1.2em]" /> <span className="hidden md:inline-flex">DeepSearch</span>
-          </button>
+
+          {/* deepsearch */}
+          <div className="relative inline-block">
+            <button
+              className={`border-1 md:px-3 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-9 md:h-9 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
+                option === "deepsearch" ? "bg-gray-200 text-secondary" : "hover:bg-gray-500/40"
+              }`}
+              onClick={toggleDeepSearchOption}
+              disabled={isGeneratingInternal}
+            >
+              <RiSearchEyeLine className="inline-block mr-0 text-[1.2em]" />
+              <span className="hidden md:inline-flex text-[17px]">DeepSearch</span>
+            </button>
+            <span className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[8px] md:text-[9px] px-2 py-0.5 ${option === 'deepsearch' ? 'bg-gray-900 text-gray-100' : 'bg-gray-300 text-gray-900'} rounded-full font-bold shadow-md text-center`}>
+              Coming Soon
+            </span>
+          </div>
 
           {/* Recommend Button */}
-          <button
-            className={`border-1 md:px-3 md:h-10 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-10 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
-              option === "recommend" ? "bg-gray-200 text-secondary" : "hover:bg-gray-500/40"
-            }`}
-            onClick={toggleRecommendOption}
-            disabled={isGeneratingInternal}
-          >
-            <FaLightbulb className="inline-block text-xl mr-0" /> <span className="hidden md:inline-flex">Recommend</span>
-          </button>
+          <div className="relative inline-block">
+            <button
+              className={`border-1 md:px-3 md:h-9 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-9 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
+                option === "recommend" ? "bg-gray-200 text-secondary" : "hover:bg-gray-500/40"
+              }`}
+              onClick={toggleRecommendOption}
+              disabled={isGeneratingInternal}
+            >
+              <FaLightbulb className="inline-block text-xl mr-0" />
+              <span className="hidden md:inline-flex text-[17px]">Recommend</span>
+            </button>
+            <span className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[8px] md:text-[9px] px-2 py-0.5 ${option === 'recommend' ? 'bg-gray-900 text-gray-100' : 'bg-gray-300 text-gray-900'} rounded-full font-semibold shadow-md text-center`}>
+              Coming Soon
+            </span>
+          </div>
+
+
         </div>
 
         {/* Submit / Cancel */}
         <div className="flex items-center">
           <TooltipWrapper tooltip={isGeneratingInternal ? "Cancel" : "Submit"} placement="right">
             {isCreating ? (
-              <button disabled className="border-1 p-1 border-gray-500 bg-white text-gray-950 rounded-full size-10 flex justify-center items-center cursor-pointer">
-                <Loading className="text-2xl" submit />
+              <button disabled className="border-1 p-1 border-gray-500 bg-white text-gray-950 rounded-full md:size-9.5 size-9 flex justify-center items-center cursor-pointer">
+                <Loading  className="text-xl" submit />
               </button>
             ) : isGeneratingInternal ? (
               <button
                 onClick={cancelGeneration}
-                className="border-1 p-1 border-gray-500 bg-white text-gray-950 rounded-full size-10 flex justify-center items-center cursor-pointer"
+                className="border-1 p-1 border-gray-500 bg-white text-gray-950 rounded-full md:size-9.5 size-9 flex justify-center items-center cursor-pointer"
               >
                 <IoMdClose className="text-2xl" />
               </button>
@@ -503,7 +519,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
               <button
                 onClick={handleSubmit}
                 disabled={isGeneratingInternal}
-                className="border-1 p-1 border-gray-500 bg-white text-gray-950 rounded-full size-10 flex justify-center items-center cursor-pointer"
+                className="border-1 p-1 border-gray-500 bg-white text-gray-950 rounded-full md:size-9.5 size-9 flex justify-center items-center cursor-pointer"
               >
                 <HiArrowSmUp className="text-3xl" />
               </button>
