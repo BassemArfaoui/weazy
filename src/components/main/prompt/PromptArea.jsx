@@ -393,7 +393,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
   
 
   return (
-    <div className="bg-secondary w-full max-w-[800px] border-1 border-gray-500 rounded-3xl items-center justify-between text-inter text-xl text-gray-300 flex flex-col gap-1 mb-2 md:mb-4 pb-1 pt-2">
+    <div className="bg-secondary w-full max-w-[800px] border-1 border-gray-500 rounded-3xl items-center justify-between text-inter text-xl  text-gray-300 flex flex-col gap-1 mb-2 md:mb-4 pb-1 pt-2">
 
       {/* Image Previews */}
       {uploadedImages.length > 0 && (
@@ -405,7 +405,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
 
       {/* Controls */}
       <div className="w-full flex items-center justify-between px-6 py-3 gap-3">
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-3 md:gap-2 items-center">
           {/* Upload Button */}
           <div className="inline-flex relative mr-2" ref={uploadMenuRef}>
             <button
