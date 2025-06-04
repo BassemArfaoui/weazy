@@ -8,7 +8,7 @@ export const ConversationProvider = ({ children }) => {
   const [deepsearchLogs, setDeepsearchLogs] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [option, setOption] = useState("none");
-  const [imageModel , setImageModel]=useState("vgg16")
+  const [imageModel , setImageModel]=useState("resnet50")
   const [resultLimit, setResultLimit] = useState(10); 
 
 
