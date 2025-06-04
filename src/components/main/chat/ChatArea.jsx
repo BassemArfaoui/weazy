@@ -69,7 +69,7 @@ function ChatArea({ conversation, isGenerating , deepsearchLogs }) {
 
         {isGenerating &&  deepsearchLogs.length === 0 && (
           <div className="w-full flex items-center pb-4">
-            <PulseLoader />
+            <PulseLoader text="Thinking ..."/>
           </div>
         )}
 

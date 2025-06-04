@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-export default function PulseLoader() {
+export default function PulseLoader({text}) {
   return (
     <div className="flex items-center justify-center gap-2 px-4 py-2">
       <motion.span
@@ -28,7 +28,7 @@ export default function PulseLoader() {
       />
       
       <span className="text-gray-400 text-lg font-medium ml-1">
-        Searching...
+        {text}
       </span>
     </div>
   );

@@ -28,6 +28,7 @@ function Settings() {
         >
           <option value="vgg16" className="font-bold font-inter">VGG16</option>
           <option value="resnet50" className="font-bold font-inter">ResNet50</option>
+          <option value="clip" className="font-bold font-inter">CLIP</option>
         </select>
       </div>
 

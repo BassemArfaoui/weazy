@@ -4,7 +4,7 @@ function Welcome() {
   return (
     <div className='flex flex-col items-center justify-center gap-1  mb-7'>
       <div className="text-gray-300 text-xl text-center">
-        Hello <span className="text-white">Bassem </span>,
+        Hello <span className="text-white">Koussay </span>,
       </div>
       <div className="text-gray-300 text-center text-2xl px-3">
         What do you want to find today?
