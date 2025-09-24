@@ -1,4 +1,4 @@
-import { capitalize } from "../../tools/functions"
+import { capitalize } from "../../tools/funcs.js"
 function ActiveTool({tool , icon , onClick , disabled}) {
   return (
     <button

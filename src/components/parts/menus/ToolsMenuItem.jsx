@@ -1,4 +1,4 @@
-import { capitalize } from '../../tools/functions'
+import { capitalize } from '../../tools/funcs.js'
 
 function ToolsMenuItem({tool , onClick  ,isActivated, icon }) {
   return (

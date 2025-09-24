@@ -6,7 +6,7 @@ import History from "../../assets/svg/History";
 import BlackModal from "../tools/BlackModal";
 import TooltipWrapper from "../tools/TooltipWrapper";
 import ChatHistory from "../menu/ChatHistory";
-import { capitalize } from "../tools/functions.js";
+import { capitalize } from "../tools/funcs.js"
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useConversation } from "../../Contexts/ConversationContext";
