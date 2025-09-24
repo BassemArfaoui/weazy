@@ -13,7 +13,7 @@ function HomePage() {
   useEffect(()=> setConversation([]), [])
 
   return (
-    <div className="h-full w-full px-0 flex-col flex justify-center items-center gap-1 md:gap-0 pb-25">
+    <div className="h-full w-full px-2 flex-col flex justify-center items-center gap-1 md:gap-0 pb-25">
       {location.pathname === "/"  &&  <Welcome />}
       <PromptArea
         conversation={conversation}

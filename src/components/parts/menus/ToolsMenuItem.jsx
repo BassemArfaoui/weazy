@@ -7,7 +7,7 @@ function ToolsMenuItem({tool , onClick  ,isActivated, icon }) {
     onClick={onClick}
   >
     <div
-      className={`text-center  font-semibold hover:bg-gray-400/40 rounded-lg p-1.5 py-1.5 my-0.25 text-base ${
+      className={`text-center font-semibold hover:bg-gray-400/40 rounded-lg p-1.5 py-1.5 my-0.25 text-base ${
         isActivated
           ? "bg-tool-activated text-tool-text-activated"
           : "text-white"

@@ -16,6 +16,7 @@ import { useConversation } from "../../../Contexts/ConversationContext";
 import { RiSearchEyeLine } from "react-icons/ri";
 import ToolsMenuItem from "../../parts/menus/ToolsMenuItem";
 import ActiveTool from "../../parts/menus/ActiveTool";
+import UploadMenuItem from "../../parts/menus/UploadMenuItem";
 
   // Define tools array for scalability
   const tools = [
@@ -180,6 +181,13 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
 
   function extractProductIds(products) {
     return products.map(product => product.id);
+  }
+
+  const openUploadInput = () => {
+    if (uploadedImages.length < parseInt(maxImg)) {
+      fileInputRef.current.click();
+      setIsUploadMenuOpen(false);
+    }
   }
 
   const handleSubmit = async () => {
@@ -416,31 +424,10 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
             </button>
 
             {isUploadMenuOpen && (
-              <div className="absolute z-10 min-w-60 rounded-xl bg-secondary shadow-lg border border-gray-500 bottom-full md:left-1/2 -left-5 md:-translate-x-1/2 mb-3 px-1">
+              <div className="absolute z-10 min-w-50 rounded-xl bg-secondary shadow-lg border border-gray-500 bottom-full md:left-1/2 -left-5 md:-translate-x-1/2 mb-2 px-0.5">
                 <div className="divide-y divide-gray-500">
-                  <div
-                    className={`p-1 cursor-pointer ${
-                      uploadedImages.length >= parseInt(maxImg)
-                        ? "opacity-50 pointer-events-none"
-                        : ""
-                    }`}
-                    onClick={() => {
-                      if (uploadedImages.length < parseInt(maxImg)) {
-                        fileInputRef.current.click();
-                        setIsUploadMenuOpen(false);
-                      }
-                    }}
-                  >
-                    <div className="text-center text-white font-semibold hover:bg-gray-400/40 rounded-lg p-2 py-2 my-0.5">
-                      From Device
-                    </div>
-                  </div>
-
-                  <div className="p-1 cursor-pointer opacity-50 pointer-events-none">
-                    <div className="text-center text-white font-semibold hover:bg-gray-400/40 rounded-lg p-2 py-2 my-0.5">
-                      From Google Drive
-                    </div>
-                  </div>
+                  <UploadMenuItem title="From Device" disabled={uploadedImages.length >= parseInt(maxImg)} onClick={openUploadInput}/>
+                  <UploadMenuItem title="From Google Drive" disabled={true} onClick={()=>{}}/>
                 </div>
               </div>
             )}
@@ -463,24 +450,30 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
           {/* Tools Button */}
           <div className="flex items-center gap-2">
             <div className="relative inline-flex" ref={toolsMenuRef}>
-              <TooltipWrapper tooltip="Choose Tool" small placement="bottom">
                 <button
                   className={`border-1 md:px-3 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-9 md:h-9 md:size-auto rounded-3xl border-border font-medium cursor-pointer hover:bg-gray-500/40`}
                   onClick={toggleToolsMenu}
-                  disabled={isGeneratingInternal}
+                  disabled={isGeneratingInternal || isGenerating}
                 >
-                  <FaSlidersH className="inline-block mr-1 size-4.5" />
-                  <span className="hidden md:inline-flex text-[17px]">Tools</span>
+                  <FaSlidersH className="inline-block  size-4.5" />
+                  <span className="hidden md:inline-flex text-[17px]">
+                    Tools
+                  </span>
                 </button>
-              </TooltipWrapper>
 
               {/* Tools Menu */}
               {isToolsMenuOpen && (
                 <div className="absolute z-10 min-w-40 rounded-xl bg-secondary shadow-lg border border-gray-500 bottom-full left-1/2 -translate-x-1/2 mb-2 px-0.5">
                   <div className="divide-y-1 divide-gray-500">
-                    {tools.map((t)=> <ToolsMenuItem tool={t.name} isActivated={option===t.name} onClick={()=>{toggleTool(t.name)}}/>
-                    )}
-                
+                    {tools.map((t) => (
+                      <ToolsMenuItem
+                        tool={t.name}
+                        isActivated={option === t.name}
+                        onClick={() => {
+                          toggleTool(t.name);
+                        }}
+                      />
+                    ))}
                   </div>
                 </div>
               )}
@@ -490,7 +483,14 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
             {option !== "none" && (
               <div className="flex items-center">
                 <TooltipWrapper tooltip="Remove tool" placement="top" small>
-                  <ActiveTool tool={option} icon={(tools.find(tool => tool.name === option))?.icon} onClick={()=>{setOption('none')}} disabled={isGeneratingInternal || isGenerating} />
+                  <ActiveTool
+                    tool={option}
+                    icon={tools.find((tool) => tool.name === option)?.icon}
+                    onClick={() => {
+                      setOption("none");
+                    }}
+                    disabled={isGeneratingInternal || isGenerating}
+                  />
                 </TooltipWrapper>
               </div>
             )}
