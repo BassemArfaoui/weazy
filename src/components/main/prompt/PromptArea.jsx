@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { HiArrowSmUp, HiOutlinePlus } from "react-icons/hi";
+import { FaSlidersH } from "react-icons/fa";
+import { IoIosArrowDown } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
 import TooltipWrapper from "../../tools/TooltipWrapper";
 import PhotoDisplayer from "../../tools/PhotoDisplayer";
@@ -12,17 +14,36 @@ import Loading from "../../tools/Loading";
 import { notify, processNotify } from "../../tools/CustomToaster";
 import { useConversation } from "../../../Contexts/ConversationContext";
 import { RiSearchEyeLine } from "react-icons/ri";
+import ToolsMenuItem from "../../parts/menus/ToolsMenuItem";
+import ActiveTool from "../../parts/menus/ActiveTool";
+
+  // Define tools array for scalability
+  const tools = [
+    {
+      name: "search",
+      icon: <FaSearch className="inline-block mr-0" />,
+    },
+    {
+      name: "recommend",
+      icon: <FaLightbulb className="inline-block text-xl mr-0" />,
+    },
+    {
+      name: "deepsearch",
+      icon: <RiSearchEyeLine className="inline-block text-xl mr-0" />,
+    },
+  ];
 
 
-function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerating , disabled}) {
-  const maxImg = import.meta.env.VITE_MAX_IMAGES
+function PromptArea({ conversation, setConversation, setIsGenerating, isGenerating, disabled }) {
+  const maxImg = import.meta.env.VITE_MAX_IMAGES;
   const userId = "11111111-1111-1111-1111-111111111111";
   const navigate = useNavigate();
   const location = useLocation();
-  const {chatId} = useParams()
-  const { model , option , setOption , imageModel , resultLimit , setDeepsearchLogs  } = useConversation()
+  const { chatId } = useParams();
+  const { model, option, setOption, imageModel, resultLimit } = useConversation();
 
   const [isUploadMenuOpen, setIsUploadMenuOpen] = useState(false);
+  const [isToolsMenuOpen, setIsToolsMenuOpen] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -32,24 +53,18 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
   const generationTimeoutRef = useRef(null);
 
   const uploadMenuRef = useRef(null);
+  const toolsMenuRef = useRef(null);
   const fileInputRef = useRef(null);
 
   const toggleUploadMenu = () => setIsUploadMenuOpen(prev => !prev);
-  const closeUploadMenu = () => setIsUploadMenuOpen(false);
 
-  const toggleSearchOption = () => {
-    setOption(prev => (prev === "search" ? "none" : "search"));  
-  };
-  
-  const toggleRecommendOption = () => {
-    setOption(prev => (prev === "recommend" ? "none" : "recommend")); 
+  const toggleToolsMenu = () => setIsToolsMenuOpen(prev => !prev);
 
+  const toggleTool = (tool) => {
+    setOption(prev => (prev === tool ? "none" : tool));
+    setIsToolsMenuOpen(false);
   };
 
-  const toggleDeepSearchOption = () => {
-    setOption(prev => (prev === "deepsearch" ? "none" : "deepsearch")); 
-  };
-  
 
   const handleFileUpload = async (event) => {
     const files = Array.from(event.target.files);
@@ -60,8 +75,8 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
       return;
     }
 
-    if (uploadedImages.length + imageFiles.length > parseInt(maxImg) ) {
-      notify(`You can only upload a maximum of ${maxImg} ${"image"+ (parseInt(maxImg) > 1 ? "s" : "") } .`);
+    if (uploadedImages.length + imageFiles.length > parseInt(maxImg)) {
+      notify(`You can only upload a maximum of ${maxImg} ${"image" + (parseInt(maxImg) > 1 ? "s" : "")}.`);
       return;
     }
 
@@ -76,14 +91,14 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
     for (let i = 0; i < imageFiles.length; i++) {
       const formData = new FormData();
       formData.append("file", imageFiles[i]);
-    
+
       try {
         const res = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/upload`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-    
+
         const uploadedUrl = res.data.data.url;
-    
+
         setUploadedImages(prev => {
           const newImages = [...prev];
           const previewIndex = newImages.findIndex(img => img.url === previews[i].url);
@@ -92,27 +107,25 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
           }
           return newImages;
         });
-    
       } catch (error) {
         console.error("Image upload failed:", error);
         setUploadedImages(prev => prev.filter(img => img.url !== previews[i].url));
         notify("Failed to upload image.");
       }
     }
-    
   };
 
   const handlePaste = async (event) => {
     const items = event.clipboardData.items;
     const imageItems = Array.from(items).filter(item => item.type.startsWith("image/"));
-  
+
     if (imageItems.length === 0) return;
-  
-    if (uploadedImages.length + imageItems.length >parseInt(maxImg)) {
-      notify(`You can only upload a maximum of ${maxImg} ${"image"+ (parseInt(maxImg) > 1 ? "s" : "") } .`);
+
+    if (uploadedImages.length + imageItems.length > parseInt(maxImg)) {
+      notify(`You can only upload a maximum of ${maxImg} ${"image" + (parseInt(maxImg) > 1 ? "s" : "")}.`);
       return;
     }
-  
+
     const previews = imageItems.map(item => {
       const file = item.getAsFile();
       return {
@@ -121,20 +134,20 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
         uploading: true,
       };
     });
-  
+
     setUploadedImages(prev => [...prev, ...previews.map(p => ({ url: p.url, uploading: true }))]);
-  
+
     for (let i = 0; i < previews.length; i++) {
       const formData = new FormData();
       formData.append("file", previews[i].file);
-  
+
       try {
         const res = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/upload`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-  
+
         const uploadedUrl = res.data.data.url;
-  
+
         setUploadedImages(prev => {
           const newImages = [...prev];
           const previewIndex = newImages.findIndex(img => img.url === previews[i].url);
@@ -150,7 +163,6 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
       }
     }
   };
-  
 
   const removeImage = (indexToRemove) => {
     setUploadedImages(prev => prev.filter((_, index) => index !== indexToRemove));
@@ -166,116 +178,100 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
     setSelectedImage(null);
   };
 
-
   function extractProductIds(products) {
     return products.map(product => product.id);
   }
 
   const handleSubmit = async () => {
     if (disabled || isCreating || isGenerating) return;
-  
+
     if (!promptText.trim() && uploadedImages.length === 0) return;
-  
+
     if (uploadedImages.some(img => img.uploading)) {
       processNotify("Please wait for all images to finish uploading");
       return;
     }
-  
+
     const newMessage = {
       id: Date.now(),
       sender: "user",
       message: promptText.trim(),
       image_urls: uploadedImages.map(img => img.url),
     };
-  
+
     if (conversation.length === 0 || location.pathname === "/") {
-      let res
-      try{
-      res = await createChat(newMessage.message, newMessage.image_urls);
-      }
-      catch (err)
-      {
-        console.log(err.message)
-        notify("Failed to create chat.")
-        navigate("/")
-        return
+      let res;
+      try {
+        res = await createChat(newMessage.message, newMessage.image_urls);
+      } catch (err) {
+        console.log(err.message);
+        notify("Failed to create chat.");
+        navigate("/");
+        return;
       }
 
       try {
         setIsGenerating(true);
         setIsGeneratingInternal(true);
-  
+
         const imageUrl = uploadedImages[0]?.url;
-  
+
         const requestData = {
-          tool : option , 
+          tool: option,
           image_url: imageUrl || "",
           chat_id: res.data.data.id,
           sender_role: "user",
           top_k: resultLimit,
-          text: promptText.trim() ,
+          text: promptText.trim(),
         };
 
-       
-  
+        const api = `${import.meta.env.VITE_MODELS_API_URL}/${model.toLowerCase()}/process/${imageModel}`;
 
-        const api = `${import.meta.env.VITE_MODELS_API_URL}/${model.toLowerCase()}/process/${imageModel}`
+        const response = await axios.post(api, requestData);
 
-        const response = await axios.post(api,requestData);
-  
         const botMessage = {
           id: Date.now(),
           sender: "model",
           message: response.data.message || "Here is what i found",
-          image_urls: response.data.image_urls || [] ,
-          products : response.data.products || [] ,
-        };  
-  
+          image_urls: response.data.image_urls || [],
+          products: response.data.products || [],
+        };
+
         setConversation(prev => [...prev, botMessage]);
         setIsGenerating(false);
         setIsGeneratingInternal(false);
 
-        const resp= {
-          chat_id : res.data.data.id,
+        const resp = {
+          chat_id: res.data.data.id,
           sender_role: "model",
           text: response.data.message || "Here is what i found",
-          image_urls: response.data.image_urls || [] ,
-          products : extractProductIds(response.data.products)  ,
-        }
+          image_urls: response.data.image_urls || [],
+          products: extractProductIds(response.data.products),
+        };
 
-        try{
+        try {
           await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/save-response`, resp);
-          }catch(error)
-          {
-            notify("failed to save response")
-          }
-
-        
+        } catch (error) {
+          notify("failed to save response");
+        }
       } catch (error) {
         console.error("Error contacting backend:", error);
         notify("Failed to get a response.");
         setIsGenerating(false);
         setIsGeneratingInternal(false);
-      } 
-
- 
-
-
-  
+      }
     } else {
-      // If it is a continuation of chat
       setConversation(prev => [...prev, newMessage]);
       setPromptText("");
       setUploadedImages([]);
       setIsGenerating(true);
       setIsGeneratingInternal(true);
-      
-  
+
       try {
         const imageUrl = uploadedImages[0]?.url;
-  
+
         const requestData = {
-          tool : option ,
+          tool: option,
           image_url: imageUrl || "",
           chat_id: chatId,
           sender_role: "user",
@@ -283,21 +279,18 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
           text: promptText.trim(),
         };
 
-        const api = `${import.meta.env.VITE_MODELS_API_URL}/${model.toLowerCase()}/process/${imageModel}`
-  
+        const api = `${import.meta.env.VITE_MODELS_API_URL}/${model.toLowerCase()}/process/${imageModel}`;
 
-        const response = await axios.post(api,requestData);
-  
-  
+        const response = await axios.post(api, requestData);
+
         const botMessage = {
           id: Date.now(),
           sender: "model",
           message: response.data.message || "Here’s what i found",
-          image_urls: response.data.image_urls || [] ,
-          products : response.data.products || [] ,
-
+          image_urls: response.data.image_urls || [],
+          products: response.data.products || [],
         };
-  
+
         setConversation(prev => [...prev, botMessage]);
         setIsGenerating(false);
         setIsGeneratingInternal(false);
@@ -315,16 +308,14 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
             sender_role: "model",
             text: botMessage.message,
             image_urls: botMessage.image_urls,
-            products:  extractProductIds(botMessage.products),
+            products: extractProductIds(botMessage.products),
           },
         };
-        try{
-        await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/save-payload`, savePayload);
-        }catch(error)
-        {
-          notify("failed to save messages")
+        try {
+          await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/save-payload`, savePayload);
+        } catch (error) {
+          notify("failed to save messages");
         }
-        
       } catch (error) {
         console.error("Error contacting backend:", error);
         notify("Failed to fetch the response.");
@@ -332,10 +323,9 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
         setUploadedImages([]);
         setIsGenerating(false);
         setIsGeneratingInternal(false);
-      } 
+      }
     }
   };
-  
 
   const cancelGeneration = () => {
     clearTimeout(generationTimeoutRef.current);
@@ -360,7 +350,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
         image_urls,
       });
       setIsGenerating(true);
-      navigate(`/chat/${res.data.data.id}?model=${model}`);
+      navigate(`/chat/${res.data.data.id}`);
       setIsCreating(false);
       return res;
     } catch (error) {
@@ -372,7 +362,10 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (uploadMenuRef.current && !uploadMenuRef.current.contains(event.target)) {
-        closeUploadMenu();
+        setIsUploadMenuOpen(false);
+      }
+      if (toolsMenuRef.current && !toolsMenuRef.current.contains(event.target)) {
+        setIsToolsMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -387,21 +380,28 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
 
   useEffect(() => {
     if (!option) {
-      setOption("search");
+      setOption("none");
     }
-  }, [option]);
-  
+  }, [option, setOption]);
 
   return (
-    <div className="bg-secondary w-full max-w-[800px] border-1 border-border rounded-3xl items-center justify-between text-inter text-xl  text-gray-300 flex flex-col gap-1 mb-2 md:mb-4 pb-1 pt-2">
-
+    <div className="bg-secondary w-full max-w-[800px] border-1 border-border rounded-3xl items-center justify-between text-inter text-xl text-gray-300 flex flex-col gap-1 mb-2 md:mb-4 pb-1 pt-2">
       {/* Image Previews */}
       {uploadedImages.length > 0 && (
-        <ImagesPreview uploadedImages={uploadedImages} removeImage={removeImage} openPhotoModal={openPhotoModal} />
+        <ImagesPreview
+          uploadedImages={uploadedImages}
+          removeImage={removeImage}
+          openPhotoModal={openPhotoModal}
+        />
       )}
 
       {/* Textarea */}
-      <TextArea promptText={promptText} setPromptText={setPromptText} handleKeyDown={handleKeyDown} disabled={isGeneratingInternal || isCreating} />
+      <TextArea
+        promptText={promptText}
+        setPromptText={setPromptText}
+        handleKeyDown={handleKeyDown}
+        disabled={isGeneratingInternal || isCreating}
+      />
 
       {/* Controls */}
       <div className="w-full flex items-center justify-between px-6 py-3 gap-3">
@@ -419,11 +419,15 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
               <div className="absolute z-10 min-w-60 rounded-xl bg-secondary shadow-lg border border-gray-500 bottom-full md:left-1/2 -left-5 md:-translate-x-1/2 mb-3 px-1">
                 <div className="divide-y divide-gray-500">
                   <div
-                    className={`p-1 cursor-pointer ${uploadedImages.length >= parseInt(maxImg) ? "opacity-50 pointer-events-none" : ""}`}
+                    className={`p-1 cursor-pointer ${
+                      uploadedImages.length >= parseInt(maxImg)
+                        ? "opacity-50 pointer-events-none"
+                        : ""
+                    }`}
                     onClick={() => {
                       if (uploadedImages.length < parseInt(maxImg)) {
                         fileInputRef.current.click();
-                        closeUploadMenu();
+                        setIsUploadMenuOpen(false);
                       }
                     }}
                   >
@@ -449,64 +453,62 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
             multiple
             onChange={handleFileUpload}
             className="hidden"
-            disabled={uploadedImages.length >= parseInt(maxImg) || isGeneratingInternal || isCreating}
+            disabled={
+              uploadedImages.length >= parseInt(maxImg) ||
+              isGeneratingInternal ||
+              isCreating
+            }
           />
 
-          {/* Search Button */}
-          <button
-            className={`border-1 md:px-3 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-9 md:h-9 md:size-auto rounded-3xl border-border font-medium cursor-pointer ${
-              option === "search" ? "bg-tool-activated text-tool-text-activated border-0" : "hover:bg-gray-500/40"
-            }`}
-            onClick={toggleSearchOption}
-            disabled={isGeneratingInternal}
-          >
-            <FaSearch className="inline-block mr-0" /> <span className="hidden md:inline-flex text-[17px]">Search</span>
-          </button>
+          {/* Tools Button */}
+          <div className="flex items-center gap-2">
+            <div className="relative inline-flex" ref={toolsMenuRef}>
+              <TooltipWrapper tooltip="Choose Tool" small placement="bottom">
+                <button
+                  className={`border-1 md:px-3 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-9 md:h-9 md:size-auto rounded-3xl border-border font-medium cursor-pointer hover:bg-gray-500/40`}
+                  onClick={toggleToolsMenu}
+                  disabled={isGeneratingInternal}
+                >
+                  <FaSlidersH className="inline-block mr-1 size-4.5" />
+                  <span className="hidden md:inline-flex text-[17px]">Tools</span>
+                </button>
+              </TooltipWrapper>
 
+              {/* Tools Menu */}
+              {isToolsMenuOpen && (
+                <div className="absolute z-10 min-w-40 rounded-xl bg-secondary shadow-lg border border-gray-500 bottom-full left-1/2 -translate-x-1/2 mb-2 px-0.5">
+                  <div className="divide-y-1 divide-gray-500">
+                    {tools.map((t)=> <ToolsMenuItem tool={t.name} isActivated={option===t.name} onClick={()=>{toggleTool(t.name)}}/>
+                    )}
+                
+                  </div>
+                </div>
+              )}
+            </div>
 
-          {/* deepsearch */}
-          {/* <div className="relative inline-block">
-            <button
-              className={`border-1 md:px-3 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-9 md:h-9 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
-                option === "deepsearch" ? "bg-gray-200 text-secondary" : "hover:bg-gray-500/40"
-              }`}
-              onClick={toggleDeepSearchOption}
-              disabled={isGeneratingInternal}
-            >
-              <RiSearchEyeLine className="inline-block mr-0 text-[1.2em]" />
-              <span className="hidden md:inline-flex text-[17px]">DeepSearch</span>
-            </button>
-            <span className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[8px] md:text-[9px] px-2 py-0.5 ${option === 'deepsearch' ? 'bg-gray-900 text-gray-100' : 'bg-gray-300 text-gray-900'} rounded-full font-bold shadow-md text-center`}>
-              Coming Soon
-            </span>
-          </div> */}
-
-          {/* Recommend Button */}
-          {/* <div className="relative inline-block">
-            <button
-              className={`border-1 md:px-3 md:h-9 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-9 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
-                option === "recommend" ? "bg-gray-200 text-secondary" : "hover:bg-gray-500/40"
-              }`}
-              onClick={toggleRecommendOption}
-              disabled={isGeneratingInternal}
-            >
-              <FaLightbulb className="inline-block text-xl mr-0" />
-              <span className="hidden md:inline-flex text-[17px]">Recommend</span>
-            </button>
-            <span className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[8px] md:text-[9px] px-2 py-0.5 ${option === 'recommend' ? 'bg-gray-900 text-gray-100' : 'bg-gray-300 text-gray-900'} rounded-full font-semibold shadow-md text-center`}>
-              Coming Soon
-            </span>
-          </div> */}
-
-
+            {/* Active Tool Display */}
+            {option !== "none" && (
+              <div className="flex items-center">
+                <TooltipWrapper tooltip="Remove tool" placement="top" small>
+                  <ActiveTool tool={option} icon={(tools.find(tool => tool.name === option))?.icon} onClick={()=>{setOption('none')}} disabled={isGeneratingInternal || isGenerating} />
+                </TooltipWrapper>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Submit / Cancel */}
         <div className="flex items-center">
-          <TooltipWrapper tooltip={isGeneratingInternal ? "Cancel" : "Submit"} placement="right">
+          <TooltipWrapper
+            tooltip={isGeneratingInternal ? "Cancel" : "Submit"}
+            placement="right"
+          >
             {isCreating ? (
-              <button disabled className="border-0 p-1  bg-white text-submit-text bg-submit rounded-full md:size-9.5 size-9 flex justify-center items-center cursor-pointer">
-                <Loading  className="text-xl" submit />
+              <button
+                disabled
+                className="border-0 p-1 bg-white text-submit-text bg-submit rounded-full md:size-9.5 size-9 flex justify-center items-center cursor-pointer"
+              >
+                <Loading className="text-xl" submit />
               </button>
             ) : isGeneratingInternal ? (
               <button
@@ -519,7 +521,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
               <button
                 onClick={handleSubmit}
                 disabled={isGeneratingInternal}
-                className="border-0 p-1  bg-submit text-submit-text rounded-full md:size-9.5 size-9 flex justify-center items-center cursor-pointer"
+                className="border-0 p-1 bg-submit text-submit-text rounded-full md:size-9.5 size-9 flex justify-center items-center cursor-pointer"
               >
                 <HiArrowSmUp className="text-3xl" />
               </button>

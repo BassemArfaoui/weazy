@@ -1,4 +1,3 @@
-import { IoIosArrowDown } from "react-icons/io";
 import { FaBars } from "react-icons/fa6";
 import { FaRegHeart } from "react-icons/fa";
 import profile from "../../assets/images/profile.png";
@@ -27,32 +26,25 @@ const Menu = ({
 }) => {
   const {
     model,
-    setModel,
-    allowedModels,
   } = useConversation();
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [isModelsMenuOpen, setIsModelsMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const modelsMenuRef = useRef(null);
   const menuRef = useRef(null);
   const mobileMenuRef = useRef(null);
 
-  const toggleModelsMenu = () => setIsModelsMenuOpen((prev) => !prev);
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
 
-  const closeModelsMenu = () => setIsModelsMenuOpen(false);
   const closeMenu = () => setIsMenuOpen(false);
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   const openNewChat = () => {
     if (location.pathname !== "/") {
-      setModel("Fashion")
       navigate("/");
     }
     if (isMobileMenuOpen) {
@@ -60,21 +52,9 @@ const Menu = ({
     }
   };
 
-  const handleModelChange = (selectedModel) => {
-    setModel(selectedModel);
-    navigate(`/?model=${selectedModel}`);
-    closeModelsMenu();
-  };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (modelsMenuRef.current && !modelsMenuRef.current.contains(event.target)) {
-        closeModelsMenu();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+
+
 
   useEffect(() => {
     const handleClickOutsideMenu = (event) => {
@@ -100,38 +80,16 @@ const Menu = ({
     <div>
       <div className="px-3 md:px-8 h-15 text-white flex items-center justify-between py-8 bg-primary shadow-md pt-10">
         <div className="flex items-center cursor-pointer">
-          <div ref={modelsMenuRef} className="relative">
+          <div  className="relative">
             <button
               className="inline-flex items-center hover:bg-gray-700/50 py-2 border-1 border-border px-1 rounded-xl"
-              onClick={toggleModelsMenu}
             >
-              <h1 className="text-xl text-white font-inter font-bold ml-2">
+              <h1 className="text-xl text-white font-inter font-bold mx-3">
                 {model}
               </h1>
-              <span className="text-white mr-2 ml-2">
-                <IoIosArrowDown className="text-xl" />
-              </span>
+
             </button>
 
-            {isModelsMenuOpen && allowedModels.length > 1 && (
-              <div className="absolute z-10 min-w-53 rounded-xl bg-secondary shadow-lg border border-gray-500 top-full left-0 mt-3 px-1">
-                <div className="divide-y divide-gray-500">
-                  {allowedModels
-                    .filter((modelItem) => modelItem !== model)
-                    .map((modelItem, index) => (
-                      <div
-                        key={index}
-                        className="p-1 py-2"
-                        onClick={() => handleModelChange(modelItem)}
-                      >
-                        <div className="text-xl text-center px-6 text-white font-inter font-bold hover:bg-gray-400/40 rounded-lg p-2 py-2.5">
-                          {modelItem}
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </div>
-            )}
           </div>
         </div>
 

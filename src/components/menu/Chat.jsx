@@ -24,7 +24,6 @@ function Chat({
 
   const location = useLocation()
   const navigate = useNavigate()
-  const {setModel}= useConversation()
 
 
   const handleKeyDown = (e) => {
@@ -43,8 +42,7 @@ function Chat({
 
   const openChat = () => {
     closeHistory();
-    setModel(chat.model)
-    navigate(`/chat/${chat.id}?model=${chat.model}`);
+    navigate(`/chat/${chat.id}`);
   };
 
   return (
