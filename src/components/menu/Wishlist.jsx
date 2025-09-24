@@ -65,7 +65,7 @@ function Wishlist({ closeWishlist }) {
 
   return (
     <div className="flex flex-col h-full">
-      <h3 className="text-center text-2xl font-bold mb-3">Wishlist</h3>
+      <h3 className="text-center text-title text-2xl font-bold mb-3">Wishlist</h3>
 
       {wishlist.length > 0 ? (
         <div className="flex flex-col h-full pb-5">

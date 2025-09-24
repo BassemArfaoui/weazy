@@ -393,7 +393,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
   
 
   return (
-    <div className="bg-secondary w-full max-w-[800px] border-1 border-gray-500 rounded-3xl items-center justify-between text-inter text-xl  text-gray-300 flex flex-col gap-1 mb-2 md:mb-4 pb-1 pt-2">
+    <div className="bg-secondary w-full max-w-[800px] border-1 border-border rounded-3xl items-center justify-between text-inter text-xl  text-gray-300 flex flex-col gap-1 mb-2 md:mb-4 pb-1 pt-2">
 
       {/* Image Previews */}
       {uploadedImages.length > 0 && (
@@ -409,7 +409,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
           {/* Upload Button */}
           <div className="inline-flex relative mr-2" ref={uploadMenuRef}>
             <button
-              className="p-2 rounded-full flex justify-center items-center border border-gray-500 hover:bg-gray-500/40 cursor-pointer md:size-9.5 size-9"
+              className="p-2 rounded-full flex justify-center items-center border border-border hover:bg-gray-500/40 cursor-pointer md:size-9.5 size-9"
               onClick={toggleUploadMenu}
             >
               <HiOutlinePlus className="text-2xl" />
@@ -454,8 +454,8 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
 
           {/* Search Button */}
           <button
-            className={`border-1 md:px-3 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-9 md:h-9 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
-              option === "search" ? "bg-gray-200 text-secondary" : "hover:bg-gray-500/40"
+            className={`border-1 md:px-3 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-9 md:h-9 md:size-auto rounded-3xl border-border font-medium cursor-pointer ${
+              option === "search" ? "bg-tool-activated text-tool-text-activated border-0" : "hover:bg-gray-500/40"
             }`}
             onClick={toggleSearchOption}
             disabled={isGeneratingInternal}
@@ -465,7 +465,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
 
 
           {/* deepsearch */}
-          <div className="relative inline-block">
+          {/* <div className="relative inline-block">
             <button
               className={`border-1 md:px-3 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-9 md:h-9 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
                 option === "deepsearch" ? "bg-gray-200 text-secondary" : "hover:bg-gray-500/40"
@@ -479,10 +479,10 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
             <span className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[8px] md:text-[9px] px-2 py-0.5 ${option === 'deepsearch' ? 'bg-gray-900 text-gray-100' : 'bg-gray-300 text-gray-900'} rounded-full font-bold shadow-md text-center`}>
               Coming Soon
             </span>
-          </div>
+          </div> */}
 
           {/* Recommend Button */}
-          <div className="relative inline-block">
+          {/* <div className="relative inline-block">
             <button
               className={`border-1 md:px-3 md:h-9 justify-center flex items-center gap-1 md:py-1 p-2 aspect-square md:aspect-auto size-9 md:size-auto rounded-3xl border-gray-500 font-medium cursor-pointer ${
                 option === "recommend" ? "bg-gray-200 text-secondary" : "hover:bg-gray-500/40"
@@ -496,7 +496,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
             <span className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[8px] md:text-[9px] px-2 py-0.5 ${option === 'recommend' ? 'bg-gray-900 text-gray-100' : 'bg-gray-300 text-gray-900'} rounded-full font-semibold shadow-md text-center`}>
               Coming Soon
             </span>
-          </div>
+          </div> */}
 
 
         </div>
@@ -505,13 +505,13 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
         <div className="flex items-center">
           <TooltipWrapper tooltip={isGeneratingInternal ? "Cancel" : "Submit"} placement="right">
             {isCreating ? (
-              <button disabled className="border-1 p-1 border-gray-500 bg-white text-gray-950 rounded-full md:size-9.5 size-9 flex justify-center items-center cursor-pointer">
+              <button disabled className="border-0 p-1  bg-white text-submit-text bg-submit rounded-full md:size-9.5 size-9 flex justify-center items-center cursor-pointer">
                 <Loading  className="text-xl" submit />
               </button>
             ) : isGeneratingInternal ? (
               <button
                 onClick={cancelGeneration}
-                className="border-1 p-1 border-gray-500 bg-white text-gray-950 rounded-full md:size-9.5 size-9 flex justify-center items-center cursor-pointer"
+                className="p-1 border-0 bg-white text-submit-text rounded-full md:size-9.5 size-9 flex justify-center items-center cursor-pointer"
               >
                 <IoMdClose className="text-2xl" />
               </button>
@@ -519,7 +519,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating ,isGenerati
               <button
                 onClick={handleSubmit}
                 disabled={isGeneratingInternal}
-                className="border-1 p-1 border-gray-500 bg-white text-gray-950 rounded-full md:size-9.5 size-9 flex justify-center items-center cursor-pointer"
+                className="border-0 p-1  bg-submit text-submit-text rounded-full md:size-9.5 size-9 flex justify-center items-center cursor-pointer"
               >
                 <HiArrowSmUp className="text-3xl" />
               </button>

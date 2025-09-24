@@ -102,7 +102,7 @@ const Menu = ({
         <div className="flex items-center cursor-pointer">
           <div ref={modelsMenuRef} className="relative">
             <button
-              className="inline-flex items-center hover:bg-gray-700/50 py-2 border-1 border-gray-600 px-1 rounded-xl"
+              className="inline-flex items-center hover:bg-gray-700/50 py-2 border-1 border-border px-1 rounded-xl"
               onClick={toggleModelsMenu}
             >
               <h1 className="text-xl text-white font-inter font-bold ml-2">
@@ -139,7 +139,7 @@ const Menu = ({
           <div className="md:flex hidden items-center">
             <TooltipWrapper tooltip="New Chat" placement="bottom">
               <span
-                className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
+                className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl text-icon"
                 onClick={openNewChat}
               >
                 <NewChat />
@@ -147,7 +147,7 @@ const Menu = ({
             </TooltipWrapper>
             <TooltipWrapper tooltip="Chat History" placement="bottom">
               <span
-                className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
+                className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl text-icon"
                 onClick={openHistory}
               >
                 <History />
@@ -155,7 +155,7 @@ const Menu = ({
             </TooltipWrapper>
             <TooltipWrapper tooltip="Wishlist" placement="bottom">
               <span
-                className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
+                className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl text-icon"
                 onClick={openWishlist}
               >
                 <FaRegHeart className="w-[26px]" />
@@ -166,7 +166,7 @@ const Menu = ({
           <div className="flex flex-col md:hidden relative" ref={mobileMenuRef}>
             <TooltipWrapper tooltip="Options" placement="left">
               <span
-                className="cursor-pointer flex hover:bg-gray-500/40 py-2 px-3 rounded-xl"
+                className="cursor-pointer flex hover:bg-gray-500/40 py-2 px-3 rounded-xl text-icon"
                 onClick={toggleMobileMenu}
               >
                 <FaBars className="w-[22px] aspect-square" />
@@ -174,18 +174,18 @@ const Menu = ({
             </TooltipWrapper>
 
             {isMobileMenuOpen && (
-              <div className="absolute z-10 rounded-xl bg-secondary shadow-lg border border-gray-500 top-full left-1/2 -translate-x-1/2  px-2 flex flex-col gap-1 py-2 ">
+              <div className="absolute z-10 rounded-xl bg-secondary shadow-lg border border-gray-500 top-full left-1/2 -translate-x-1/2  px-2 flex flex-col gap-1 py-2">
                 <TooltipWrapper tooltip="New Chat" placement="left">
                   <span
-                    className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
+                    className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl text-icon"
                     onClick={openNewChat}
                   >
-                    <NewChat />
+                    <NewChat/>
                   </span>
                 </TooltipWrapper>
                 <TooltipWrapper tooltip="Chat History" placement="left">
                   <span
-                    className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
+                    className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xlc text-icon"
                     onClick={openHistory}
                   >
                     <History />
@@ -193,7 +193,7 @@ const Menu = ({
                 </TooltipWrapper>
                 <TooltipWrapper tooltip="Wishlist" placement="left">
                   <span
-                    className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl"
+                    className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl text-icon"
                     onClick={openWishlist}
                   >
                     <FaRegHeart className="w-[26px]" />
@@ -203,8 +203,8 @@ const Menu = ({
             )}
           </div>
 
-          <div ref={menuRef} className="relative ml-2 md:ml-5 cursor-pointer size-10">
-            <div className="rounded-full bg-gray-300 border-2 border-gray-100 w-full h-full overflow-hidden">
+          <div ref={menuRef} className="relative ml-2 md:ml-5 cursor-pointer size-11">
+            <div className="rounded-full bg-gray-300 border-2 border-border w-full h-full overflow-hidden">
               <img
                 src={profile}
                 alt="profile"
@@ -250,7 +250,6 @@ const Menu = ({
       </BlackModal>
 
       <BlackModal open={settingsOpen} onClose={closeSettings} closeModal={closeSettings}>
-        <h3 className="text-center text-2xl font-bold">Settings</h3>
         <Settings />
       </BlackModal>
     </div>

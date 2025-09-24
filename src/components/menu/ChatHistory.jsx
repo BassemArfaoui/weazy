@@ -175,7 +175,7 @@ function ChatHistory({ isOpen , closeHistory }) {
 
   return (
     <div className="flex flex-col w-full h-full max-h-screen gap-5">
-      <h1 className="text-center text-2xl font-bold">Chat History</h1>
+      <h1 className="text-center text-2xl text-title font-bold mb-3">Chat History</h1>
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="w-full md:px-6">
           <div className="h-[55px] border-2 border-gray-500 flex items-center rounded-2xl">

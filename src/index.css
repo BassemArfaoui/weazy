@@ -7,15 +7,38 @@
   --font-poppins:  "poppins" ; 
   --font-roboto: "roboto" ;
   --font-roboto-mono:  "Roboto Mono", monospace;
-  --font-inter: "inter" , ui-sans-serif, -apple-system , system-ui, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"  ;
+  --font-inter:  var(--theme-font-primary,"Inter")  , ui-sans-serif, -apple-system , system-ui, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"  ;
 
-  --color-primary : #1c1d1f;
-  --color-secondary : #3a3b3d;
+ 
+  --color-primary: var(--theme-color-primary, #1c1d1f);
+  --color-secondary :var(--theme-color-secondary,#3a3b3d) ;
   --color-modal : #2f3032 ;
   --color-dark : #0d0d0d ;
-  --color-msg : var(--color-gray-700) ;
+  --color-msg :  var(--theme-color-msg, #374151);
+  --color-border : var(--theme-color-border, #6b7280) ;
+  --color-title : var(--theme-color-title, white) ;
+  --color-icon : var(--theme-color-icon, white) ;
+  --color-submit : var(--theme-color-submit, white) ;
+  --color-submit-text : var(--theme-color-submit-text, black) ;
+  --color-tool-activated : var(--theme-color-tool-activated, white) ;
+  --color-tool-text-activated : var(--theme-color-tool-text-activated, black) ;
+
+
   
 }
+
+@utility user-msg {
+  color : var(--msg-text , #f3f4f6) ;
+  background-color : var(--msg-bg , #374151) ;
+  border-radius : var(--msg-radius , 1rem 1rem 0 1rem) ;
+}
+
+@utility main-border {
+  border-color: var(--border-color, #6b7280);
+  border-width: var(--border-width, 1px);
+  border-style: var(--border-style, solid);
+}
+
 
 @keyframes ripple {
   0% {
@@ -27,6 +50,9 @@
     opacity: 0;
   }
 }
+
+
+
 
 .animate-ripple {
   animation: ripple 1.8s ease-out infinite;
