@@ -6,7 +6,7 @@ import History from "../../assets/svg/History";
 import BlackModal from "../tools/BlackModal";
 import TooltipWrapper from "../tools/TooltipWrapper";
 import ChatHistory from "../menu/ChatHistory";
-
+import { capitalize } from "../tools/functions";
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useConversation } from "../../Contexts/ConversationContext";
@@ -85,7 +85,7 @@ const Menu = ({
               className="inline-flex items-center hover:bg-gray-700/50 py-2 border-1 border-border px-1 rounded-xl"
             >
               <h1 className="text-xl text-white font-inter font-bold mx-3">
-                {model}
+                {capitalize(model)}
               </h1>
 
             </button>

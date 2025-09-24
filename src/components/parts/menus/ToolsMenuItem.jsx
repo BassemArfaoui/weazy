@@ -1,4 +1,4 @@
-import React from 'react'
+import { capitalize } from '../../tools/functions'
 
 function ToolsMenuItem({tool , onClick  ,isActivated, icon }) {
   return (
@@ -13,7 +13,7 @@ function ToolsMenuItem({tool , onClick  ,isActivated, icon }) {
           : "text-white"
       }`}
     >
-      {tool}
+      {capitalize(tool)}
     </div>
   </div>
   )

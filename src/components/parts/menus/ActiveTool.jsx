@@ -1,5 +1,4 @@
-import React from 'react'
-
+import { capitalize } from "../../tools/functions"
 function ActiveTool({tool , icon , onClick , disabled}) {
   return (
     <button
@@ -9,7 +8,7 @@ function ActiveTool({tool , icon , onClick , disabled}) {
   >
     {icon}
     <span className="md:inline-flex text-[17px]">
-      {tool}
+      {capitalize(tool)}
     </span>
   </button>
   )
