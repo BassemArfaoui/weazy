@@ -415,7 +415,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
       <div className="w-full flex items-center justify-between px-6 py-3 gap-3">
         <div className="flex gap-3 md:gap-2 items-center">
           {/* Upload Button */}
-          <div className="inline-flex relative mr-2" ref={uploadMenuRef}>
+          <div className="inline-flex relative md:mr-2" ref={uploadMenuRef}>
             <button
               className="p-2 rounded-full flex justify-center items-center border border-border hover:bg-gray-500/40 cursor-pointer md:size-9.5 size-9"
               onClick={toggleUploadMenu}
