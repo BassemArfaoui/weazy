@@ -4,7 +4,7 @@ function TextArea({promptText, setPromptText, handleKeyDown, disabled}) {
   return (
     <div className="px-8 w-full">
     <textarea
-      placeholder="🔎︎  Look for anything in your mind"
+      placeholder="🔎︎  Look for whatever in your mind"
       style={{ resize: "none" }}
       className="bg-transparent pt-3 w-full border-none outline-none text-gray-300 text-lg"
       value={promptText}

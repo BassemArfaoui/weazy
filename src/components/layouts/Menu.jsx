@@ -6,12 +6,13 @@ import History from "../../assets/svg/History";
 import BlackModal from "../tools/BlackModal";
 import TooltipWrapper from "../tools/TooltipWrapper";
 import ChatHistory from "../menu/ChatHistory";
-import { capitalize } from "../tools/functions";
+import { capitalize } from "../tools/functions.js";
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useConversation } from "../../Contexts/ConversationContext";
 import Settings from "../menu/Settings";
 import Wishlist from "../menu/Wishlist";
+import MenuItem from "../parts/menus/MenuItem"
 
 const Menu = ({
   historyOpen,
@@ -52,6 +53,16 @@ const Menu = ({
     }
   };
 
+  const openSettingsAndCloseMenu = () => {
+    closeMenu();
+    openSettings();
+  }
+
+  const logout = () =>
+  {
+
+  } 
+
 
 
 
@@ -80,16 +91,12 @@ const Menu = ({
     <div>
       <div className="px-3 md:px-8 h-15 text-white flex items-center justify-between py-8 bg-primary shadow-md pt-10">
         <div className="flex items-center cursor-pointer">
-          <div  className="relative">
-            <button
-              className="inline-flex items-center hover:bg-gray-700/50 py-2 border-1 border-border px-1 rounded-xl"
-            >
+          <div className="relative">
+            <button className="inline-flex items-center hover:bg-gray-700/50 py-2 border-1 border-border px-1 rounded-xl">
               <h1 className="text-xl text-white font-inter font-bold mx-3">
                 {capitalize(model)}
               </h1>
-
             </button>
-
           </div>
         </div>
 
@@ -138,7 +145,7 @@ const Menu = ({
                     className="cursor-pointer hover:bg-gray-500/40 p-2 rounded-xl text-icon"
                     onClick={openNewChat}
                   >
-                    <NewChat/>
+                    <NewChat />
                   </span>
                 </TooltipWrapper>
                 <TooltipWrapper tooltip="Chat History" placement="left">
@@ -161,7 +168,10 @@ const Menu = ({
             )}
           </div>
 
-          <div ref={menuRef} className="relative ml-2 md:ml-5 cursor-pointer size-11">
+          <div
+            ref={menuRef}
+            className="relative ml-2 md:ml-5 cursor-pointer size-11"
+          >
             <div className="rounded-full bg-gray-300 border-2 border-border w-full h-full overflow-hidden">
               <img
                 src={profile}
@@ -170,27 +180,11 @@ const Menu = ({
                 onClick={toggleMenu}
               />
             </div>
-
             {isMenuOpen && (
-              <div className="absolute z-10 min-w-45 rounded-xl bg-secondary shadow-lg border border-gray-500 top-full -right-3 mt-4 px-1">
+              <div className="absolute z-10 min-w-40 rounded-xl bg-secondary shadow-lg border border-gray-500 top-full -right-3 mt-2 px-0.5">
                 <div className="divide-y divide-gray-500">
-                  <div
-                    className="p-1 cursor-pointer"
-                    onClick={() => {
-                      closeMenu();
-                      openSettings();
-                    }}
-                  >
-                    <div className="text-lg text-center text-white font-inter font-bold rounded-lg p-2 py-2.5 my-0.5 hover:bg-gray-400/40">
-                      Settings
-                    </div>
-                  </div>
-
-                  <div className="p-1 cursor-pointer">
-                    <div className="text-lg text-center text-white font-inter font-bold rounded-lg p-2 py-2.5 my-0.5 hover:bg-gray-400/40">
-                      Logout
-                    </div>
-                  </div>
+                  <MenuItem title="Settings" onClick={openSettingsAndCloseMenu}/>
+                  <MenuItem title="Logout" onClick={logout}/>
                 </div>
               </div>
             )}
@@ -199,15 +193,27 @@ const Menu = ({
       </div>
 
       {/* Modals */}
-      <BlackModal open={historyOpen} onClose={closeHistory} closeModal={closeHistory}>
+      <BlackModal
+        open={historyOpen}
+        onClose={closeHistory}
+        closeModal={closeHistory}
+      >
         <ChatHistory closeHistory={closeHistory} />
       </BlackModal>
 
-      <BlackModal open={wishlistOpen} onClose={closeWishlist} closeModal={closeWishlist}>
-        <Wishlist closeWishlist={closeWishlist}/>
+      <BlackModal
+        open={wishlistOpen}
+        onClose={closeWishlist}
+        closeModal={closeWishlist}
+      >
+        <Wishlist closeWishlist={closeWishlist} />
       </BlackModal>
 
-      <BlackModal open={settingsOpen} onClose={closeSettings} closeModal={closeSettings}>
+      <BlackModal
+        open={settingsOpen}
+        onClose={closeSettings}
+        closeModal={closeSettings}
+      >
         <Settings />
       </BlackModal>
     </div>
