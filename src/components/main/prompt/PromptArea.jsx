@@ -41,7 +41,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
   const navigate = useNavigate();
   const location = useLocation();
   const { chatId } = useParams();
-  const { model, option, setOption, imageModel, resultLimit } = useConversation();
+  const { shop, option, setOption, imageModel, resultLimit } = useConversation();
 
   const [isUploadMenuOpen, setIsUploadMenuOpen] = useState(false);
   const [isToolsMenuOpen, setIsToolsMenuOpen] = useState(false);
@@ -233,7 +233,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
           text: promptText.trim(),
         };
 
-        const api = `${import.meta.env.VITE_MODELS_API_URL}/${model.toLowerCase()}/process/${imageModel}`;
+        const api = `${import.meta.env.VITE_MODELS_API_URL}/${shop.toLowerCase()}/process/${imageModel}`;
 
         const response = await axios.post(api, requestData);
 
@@ -287,7 +287,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
           text: promptText.trim(),
         };
 
-        const api = `${import.meta.env.VITE_MODELS_API_URL}/${model.toLowerCase()}/process/${imageModel}`;
+        const api = `${import.meta.env.VITE_MODELS_API_URL}/${shop.toLowerCase()}/process/${imageModel}`;
 
         const response = await axios.post(api, requestData);
 
@@ -354,7 +354,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/create-chat`, {
         user_id: userId,
         message,
-        model,
+        shop,
         image_urls,
       });
       setIsGenerating(true);

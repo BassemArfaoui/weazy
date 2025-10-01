@@ -26,7 +26,7 @@ const Menu = ({
   openSettings,
 }) => {
   const {
-    model,
+    shop,
   } = useConversation();
 
   const navigate = useNavigate();
@@ -94,7 +94,7 @@ const Menu = ({
           <div className="relative">
             <button className="inline-flex items-center hover:bg-gray-700/50 py-2 border-1 border-border px-1 rounded-xl">
               <h1 className="text-xl text-white font-inter font-bold mx-3">
-                {capitalize(model)}
+                {capitalize(shop)}
               </h1>
             </button>
           </div>

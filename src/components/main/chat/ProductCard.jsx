@@ -24,7 +24,7 @@ function ProductCard({product , setWishlist , wishlist , closeWishlist}) {
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const {converstion, setConversation , setIsGenerating , model} = useConversation()
+  const { setConversation , setIsGenerating , shop} = useConversation()
 
   const location = useLocation()
   const {chatId} = useParams()
@@ -51,7 +51,8 @@ function ProductCard({product , setWishlist , wishlist , closeWishlist}) {
     await axios.post(`${API_URL}/add-to-wishlist` , 
     {
       "user_id": userId,
-      "product_id": product.id
+      "product_id": product.id,
+      shop
     })
     successNotify("Product added to Wishlist")
    }
@@ -100,7 +101,7 @@ function ProductCard({product , setWishlist , wishlist , closeWishlist}) {
     
     try
     {
-      const response = await axios.get(`${ML_API_URL}/${model.toLowerCase()}/description/${product.id}`)
+      const response = await axios.get(`${ML_API_URL}/${shop.toLowerCase()}/description/${product.id}`)
       const resp={
         id: Date.now(),
         sender: "model",

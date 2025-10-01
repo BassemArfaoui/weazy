@@ -16,7 +16,7 @@ export const ConversationProvider = ({ children }) => {
     return parts.length >= 2 ? parts[0] : ""; 
   };
 
-  const model = getSubdomain(); 
+  const shop = getSubdomain(); 
 
   return (
     <ConversationContext.Provider value={{
@@ -24,7 +24,7 @@ export const ConversationProvider = ({ children }) => {
       setConversation,
       isGenerating,
       setIsGenerating,
-      model,  
+      shop,  
       option,     
       setOption,
       imageModel,

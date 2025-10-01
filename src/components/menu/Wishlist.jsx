@@ -4,11 +4,14 @@ import Loading from "../tools/Loading";
 import { notify } from "../tools/CustomToaster";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useConversation } from "../../Contexts/ConversationContext";
 
 function Wishlist({ closeWishlist }) {
   const userId = "11111111-1111-1111-1111-111111111111";
   const API_URL = import.meta.env.VITE_BACKEND_API_URL;
   const scrollContainerRef = useRef(null);
+
+  const { shop } = useConversation();
 
   const {
     data,
@@ -21,7 +24,7 @@ function Wishlist({ closeWishlist }) {
   } = useInfiniteQuery({
     queryKey: ["wishlist", userId],
     queryFn: async ({ pageParam = 1 }) => {
-      const res = await axios.get(`${API_URL}/wishlist/${userId}?page=${pageParam}&limit=21`);
+      const res = await axios.get(`${API_URL}/wishlist/${shop}/${userId}?page=${pageParam}&limit=21`);
       return res.data;
     },
     getNextPageParam: (lastPage) => {
