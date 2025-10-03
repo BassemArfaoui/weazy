@@ -10,6 +10,7 @@ import { useConversation } from "../Contexts/ConversationContext"
 import ErrorComponent from '../components/tools/ErrorComponent';
 
 const userId = "11111111-1111-1111-1111-111111111111";
+const ML_API_URL=import.meta.env.VITE_MODELS_API_URL;
 
 const fetchChatById = async (chatId) => {
   const response = await axios.get(`${import.meta.env.VITE_BACKEND_API_URL}/chat/${chatId}/${userId}`);
@@ -49,11 +50,7 @@ function ChatPage() {
       const renameChat = async () => {
         if (refetchChatName) {
           try {
-            await axios.put(`http://localhost:3333/rename-chat/${chatId}`, {
-              chatId: chatId,
-              title: "Test"+ Date.now(), 
-            });
-  
+            await axios.get(`${ML_API_URL}/rename-chat/${chatId}`)
             setRefetchChatName(false);
           } catch (err) {
             console.error("Failed to rename chat:", err);
