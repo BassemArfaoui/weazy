@@ -101,7 +101,7 @@ function ProductCard({product , setWishlist , wishlist , closeWishlist}) {
     
     try
     {
-      const response = await axios.get(`${ML_API_URL}/${shop.toLowerCase()}/description/${product.id}`)
+      const response = await axios.get(`${ML_API_URL}/description/${shop.toLowerCase()}/${product.id}`)
       const resp={
         id: Date.now(),
         sender: "model",
