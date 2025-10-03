@@ -6,7 +6,7 @@ export const ConversationProvider = ({ children }) => {
   const [conversation, setConversation] = useState([]);
   const [deepsearchLogs, setDeepsearchLogs] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [option, setOption] = useState("none");
+  const [tool, setTool] = useState("none");
   const [imageModel, setImageModel] = useState("resnet50");
   const [resultLimit, setResultLimit] = useState(10);
   const getSubdomain = () => {
@@ -25,8 +25,8 @@ export const ConversationProvider = ({ children }) => {
       isGenerating,
       setIsGenerating,
       shop,  
-      option,     
-      setOption,
+      tool,     
+      setTool,
       imageModel,
       setImageModel,
       resultLimit,

@@ -41,7 +41,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
   const navigate = useNavigate();
   const location = useLocation();
   const { chatId } = useParams();
-  const { shop, option, setOption, imageModel, resultLimit } = useConversation();
+  const { shop, tool, setTool, imageModel, resultLimit } = useConversation();
 
   const [isUploadMenuOpen, setIsUploadMenuOpen] = useState(false);
   const [isToolsMenuOpen, setIsToolsMenuOpen] = useState(false);
@@ -62,7 +62,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
   const toggleToolsMenu = () => setIsToolsMenuOpen(prev => !prev);
 
   const toggleTool = (tool) => {
-    setOption(prev => (prev === tool ? "none" : tool));
+    setTool(prev => (prev === tool ? "none" : tool));
     setIsToolsMenuOpen(false);
   };
 
@@ -225,7 +225,8 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
         const imageUrl = uploadedImages[0]?.url;
 
         const requestData = {
-          tool: option,
+          tool,
+          shop,
           image_url: imageUrl || "",
           chat_id: res.data.data.id,
           sender_role: "user",
@@ -233,7 +234,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
           text: promptText.trim(),
         };
 
-        const api = `${import.meta.env.VITE_MODELS_API_URL}/${shop.toLowerCase()}/process/${imageModel}`;
+        const api = `${import.meta.env.VITE_MODELS_API_URL}/process/${imageModel}`;
 
         const response = await axios.post(api, requestData);
 
@@ -279,7 +280,8 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
         const imageUrl = uploadedImages[0]?.url;
 
         const requestData = {
-          tool: option,
+          tool,
+          shop,
           image_url: imageUrl || "",
           chat_id: chatId,
           sender_role: "user",
@@ -287,7 +289,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
           text: promptText.trim(),
         };
 
-        const api = `${import.meta.env.VITE_MODELS_API_URL}/${shop.toLowerCase()}/process/${imageModel}`;
+        const api = `${import.meta.env.VITE_MODELS_API_URL}/process/${imageModel}`;
 
         const response = await axios.post(api, requestData);
 
@@ -387,10 +389,10 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
   }, [uploadedImages]);
 
   useEffect(() => {
-    if (!option) {
-      setOption("none");
+    if (!tool) {
+      setTool("none");
     }
-  }, [option, setOption]);
+  }, [tool, setTool]);
 
   return (
     <div className="bg-secondary w-full max-w-[800px] border-1 border-border rounded-3xl items-center justify-between text-inter text-xl text-gray-300 flex flex-col gap-1 mb-2 md:mb-4 pb-1 pt-2">
@@ -468,7 +470,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
                     {tools.map((t) => (
                       <ToolsMenuItem
                         tool={t.name}
-                        isActivated={option === t.name}
+                        isActivated={tool === t.name}
                         onClick={() => {
                           toggleTool(t.name);
                         }}
@@ -480,14 +482,14 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
             </div>
 
             {/* Active Tool Display */}
-            {option !== "none" && (
+            { tool!== "none" && (
               <div className="flex items-center">
                 <TooltipWrapper tooltip="Remove tool" placement="top" small>
                   <ActiveTool
-                    tool={option}
-                    icon={tools.find((tool) => tool.name === option)?.icon}
+                    tool={tool}
+                    icon={tools.find((tool) => tool.name === tool)?.icon}
                     onClick={() => {
-                      setOption("none");
+                      setTool("none");
                     }}
                     disabled={isGeneratingInternal || isGenerating}
                   />
