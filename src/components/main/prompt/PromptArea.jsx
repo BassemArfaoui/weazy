@@ -41,7 +41,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
   const navigate = useNavigate();
   const location = useLocation();
   const { chatId } = useParams();
-  const { shop, tool, setTool, imageModel, resultLimit } = useConversation();
+  const { shop, tool, setTool, imageModel, resultLimit , setRefetchChatName } = useConversation();
 
   const [isUploadMenuOpen, setIsUploadMenuOpen] = useState(false);
   const [isToolsMenuOpen, setIsToolsMenuOpen] = useState(false);
@@ -259,7 +259,8 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
         };
 
         try {
-          await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/save-response`, resp);
+          const res = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/save-response`, resp);
+          setRefetchChatName(res.data.data.refetchChatName);
         } catch (error) {
           notify("failed to save response");
         }
@@ -322,7 +323,8 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
           },
         };
         try {
-          await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/save-payload`, savePayload);
+          const res = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/save-payload`, savePayload);
+          setRefetchChatName(res.data.data.refetchChatName);
         } catch (error) {
           notify("failed to save messages");
         }

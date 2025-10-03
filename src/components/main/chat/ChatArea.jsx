@@ -5,10 +5,13 @@ import Welcome from "./Welcome";
 import Message from "./Message";
 import PictureMessages from "./PictureMessages";
 import ProductsList from "./ProductsList"
+import { useConversation } from "../../../Contexts/ConversationContext";
 
 function ChatArea({ conversation, isGenerating , deepsearchLogs }) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
+  const {refetchChatName , setRefetchChatName } = useConversation()
+
 
   const lastMessageRef = useRef(null);
 

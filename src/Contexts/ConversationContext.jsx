@@ -9,6 +9,7 @@ export const ConversationProvider = ({ children }) => {
   const [tool, setTool] = useState("none");
   const [imageModel, setImageModel] = useState("resnet50");
   const [resultLimit, setResultLimit] = useState(10);
+  const [refetchChatName, setRefetchChatName] = useState(false);
   const getSubdomain = () => {
     const host = window.location.hostname;
     console.log(host)
@@ -32,7 +33,9 @@ export const ConversationProvider = ({ children }) => {
       resultLimit,
       setResultLimit,
       deepsearchLogs,
-      setDeepsearchLogs
+      setDeepsearchLogs,
+      refetchChatName,
+      setRefetchChatName
     }}>
       {children}
     </ConversationContext.Provider>

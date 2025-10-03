@@ -18,8 +18,16 @@ const fetchChatById = async (chatId) => {
 
 function ChatPage() {
     const { chatId } = useParams();
-    const { conversation, setConversation, isGenerating, setIsGenerating , deepsearchLogs} = useConversation();
-  
+    const {
+      conversation,
+      setConversation,
+      isGenerating,
+      setIsGenerating,
+      deepsearchLogs,
+      refetchChatName,
+      setRefetchChatName,
+    } = useConversation();
+
     const {
       data,
       isPending,
@@ -36,6 +44,25 @@ function ChatPage() {
         setConversation(data.data);
       }
     }, [data, setConversation]);
+
+    useEffect(() => {
+      const renameChat = async () => {
+        if (refetchChatName) {
+          try {
+            await axios.put(`http://localhost:3333/rename-chat/${chatId}`, {
+              chatId: chatId,
+              title: "Test"+ Date.now(), 
+            });
+  
+            setRefetchChatName(false);
+          } catch (err) {
+            console.error("Failed to rename chat:", err);
+          }
+        }
+      };
+  
+      renameChat();
+    }, [refetchChatName]); 
   
     if (isError) {
       return <ErrorComponent />
