@@ -64,7 +64,8 @@ function Wishlist({ closeWishlist }) {
     return null;
   }
 
-  const wishlist = data?.pages.flatMap((page) => page.data) || [];
+  const wishlist = data?.pages.flatMap((page) => page.data || []).filter(Boolean) || [];
+  console.log("Wishlist items:", wishlist);
 
   return (
     <div className="flex flex-col h-full">
@@ -76,9 +77,9 @@ function Wishlist({ closeWishlist }) {
             ref={scrollContainerRef}
             className="flex justify-center px-4 py-5 gap-3 flex-wrap overflow-y-auto flex-1"
           >
-            {wishlist.map((item) => (
+            {wishlist?.map((item) => (
               <ProductCard
-                key={item.id}
+                key={Date.now() + Math.random()}
                 product={item}
                 setWishlist={() => {}}
                 wishlist={wishlist}

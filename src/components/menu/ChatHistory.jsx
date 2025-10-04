@@ -4,12 +4,13 @@ import axios from "axios";
 import Loading from "../tools/Loading";
 import Chat from "./Chat";
 import { notify } from "../tools/CustomToaster";
+import { useConversation } from "../../Contexts/ConversationContext";
 
 const API_URL = import.meta.env.VITE_BACKEND_API_URL;
 const userId = "11111111-1111-1111-1111-111111111111";
 
-const fetchChats = async ({ pageParam = 1 }) => {
-  const response = await axios.get(`${API_URL}/chats/${userId}`, {
+const fetchChats = async ({ pageParam = 1 , shop }) => {
+  const response = await axios.get(`${API_URL}/chats/${shop}/${userId}`, {
     params: { page: pageParam },
   });
   return response.data;
@@ -28,7 +29,15 @@ const deleteChat = async (id) => {
 function ChatHistory({ isOpen , closeHistory }) {
   const [editingId, setEditingId] = useState(null);
   const [chatEdits, setChatEdits] = useState({});
+  const {shop} = useConversation();
   const queryClient = useQueryClient();
+
+  const fetchChats = async ({ pageParam = 1 }) => {
+    const response = await axios.get(`${API_URL}/chats/${shop}/${userId}`, {
+      params: { page: pageParam },
+    });
+    return response.data;
+  }; 
 
   const {
     isLoading,
@@ -48,6 +57,8 @@ function ChatHistory({ isOpen , closeHistory }) {
     cacheTime: 0,
     staleTime: 0,
   });
+
+
 
   const observer = useRef();
   const lastChatRef = useRef();
