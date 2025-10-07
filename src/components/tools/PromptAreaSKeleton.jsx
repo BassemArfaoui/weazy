@@ -10,7 +10,7 @@ function PromptAreaSkeleton() {
       <div className="flex justify-center w-full pb-2 md:pb-4">
         <div className="bg-secondary w-full max-w-[800px] border-1 border-gray-500 rounded-3xl flex flex-col gap-4 p-4 px-6 animate-pulse">
           {/* Textarea Placeholder */}
-          <div className="bg-gray-400/20 rounded-2xl h-15 w-full" />
+          <div className="bg-gray-400/20 rounded-2xl h-7 w-full" />
           {/* Controls Placeholder */}
           <div className="flex justify-between items-center w-full mt-2">
             <div className="flex gap-3">
