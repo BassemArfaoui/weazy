@@ -3,7 +3,7 @@ import { MdClose } from "react-icons/md";
 
 function ImagesPreview({ uploadedImages, removeImage, openPhotoModal }) {
   return (
-    <div className="flex gap-3 px-7 justify-start w-full  flex-wrap mt-1">
+    <div className="flex gap-3 px-7 justify-start w-full  flex-wrap mt-1 mb-2">
       {uploadedImages.map((image, index) => (
         <div key={index} className="relative size-16 cursor-pointer" onClick={() => openPhotoModal(image)}>
           <img src={image.url} alt="Uploaded Preview" className="object-cover w-full h-full rounded-xl" />
