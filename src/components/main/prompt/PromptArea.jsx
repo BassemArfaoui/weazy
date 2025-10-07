@@ -18,7 +18,6 @@ import ToolsMenuItem from "../../parts/menus/ToolsMenuItem";
 import ActiveTool from "../../parts/menus/ActiveTool";
 import UploadMenuItem from "../../parts/menus/UploadMenuItem";
 
-  // Define tools array for scalability
   const tools = [
     {
       name: "search",
@@ -489,7 +488,7 @@ function PromptArea({ conversation, setConversation, setIsGenerating, isGenerati
                 <TooltipWrapper tooltip="Remove tool" placement="top" small>
                   <ActiveTool
                     tool={tool}
-                    icon={tools.find((tool) => tool.name === tool)?.icon}
+                    icon={tools.find((t) => t.name === tool)?.icon}
                     onClick={() => {
                       setTool("none");
                     }}
